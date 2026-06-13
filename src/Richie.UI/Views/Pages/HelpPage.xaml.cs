@@ -8,5 +8,5 @@ public partial class HelpPage : Page
     public HelpPage() => InitializeComponent();
 
     private void OnReplayTour(object sender, RoutedEventArgs e) =>
-        ((App)Application.Current).RequestTour();
+        ((App)System.Windows.Application.Current).RequestTour();
 }
