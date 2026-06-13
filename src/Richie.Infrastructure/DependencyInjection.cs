@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Richie.Application.Abstractions;
+using Richie.Application.Assets;
 using Richie.Application.Authentication;
 using Richie.Application.Security;
+using Richie.Infrastructure.Assets;
 using Richie.Infrastructure.Authentication;
 using Richie.Infrastructure.Persistence;
 using Richie.Infrastructure.Security;
@@ -27,6 +29,9 @@ public static class DependencyInjection
         services.AddSingleton<IClock, SystemClock>();
         services.AddSingleton<IUserSession, UserSession>();
         services.AddSingleton<IAuthService, AuthService>();
+
+        services.AddSingleton<IValuationService, ValuationService>();
+        services.AddSingleton<IAssetService, AssetService>();
         return services;
     }
 }

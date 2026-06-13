@@ -1,5 +1,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Richie.Domain.Assets;
+using Richie.Domain.Auditing;
 using Richie.Domain.Authentication;
 
 namespace Richie.Infrastructure.Persistence;
@@ -15,6 +17,8 @@ public class RichieDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Asset> Assets => Set<Asset>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

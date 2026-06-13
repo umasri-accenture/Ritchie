@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Richie.Infrastructure.Persistence;
 
@@ -10,9 +11,11 @@ using Richie.Infrastructure.Persistence;
 namespace Richie.Infrastructure.Migrations
 {
     [DbContext(typeof(RichieDbContext))]
-    partial class RichieDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260613182620_AddAssetsAndAuditLog")]
+    partial class AddAssetsAndAuditLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
