@@ -67,6 +67,15 @@ public sealed class AuthServiceTests : IDisposable
     }
 
     [Fact]
+    public void Login_ReportsFirstLogin_OnlyOnTheFirstSuccess()
+    {
+        _sut.Signup(ValidSignup());
+
+        Assert.True(_sut.Login("alice", "Sup3rSecret!").IsFirstLogin);
+        Assert.False(_sut.Login("alice", "Sup3rSecret!").IsFirstLogin);
+    }
+
+    [Fact]
     public void Login_WithWrongPassword_FailsWithInvalidCredentials()
     {
         _sut.Signup(ValidSignup());

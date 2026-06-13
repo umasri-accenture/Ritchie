@@ -15,11 +15,12 @@ namespace Richie.UI;
 
 /// <summary>
 /// Composition root and window lifecycle: splash → auth (signup/login) → main shell,
-/// with logout returning to the auth window.
+/// with logout and inactivity auto-lock returning to the auth window.
 /// </summary>
 public partial class App : System.Windows.Application
 {
     private readonly IHost _host;
+    private MainWindow? _main;
 
     public App()
     {
@@ -41,6 +42,8 @@ public partial class App : System.Windows.Application
 
                 services.AddSingleton<AuthNavigationService>();
                 services.AddSingleton<IAuthNavigation>(sp => sp.GetRequiredService<AuthNavigationService>());
+                services.AddSingleton<InactivityLockService>();
+                services.AddSingleton<TourService>();
 
                 services.AddTransient<LoginViewModel>();
                 services.AddTransient<SignupViewModel>();
@@ -54,6 +57,9 @@ public partial class App : System.Windows.Application
             })
             .Build();
     }
+
+    /// <summary>Requested from the Help page to replay the app tour.</summary>
+    public void RequestTour() => _host.Services.GetRequiredService<TourService>().Request();
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -93,10 +99,10 @@ public partial class App : System.Windows.Application
         var window = _host.Services.GetRequiredService<AuthWindow>();
 
         EventHandler<AuthenticatedEventArgs>? onAuthenticated = null;
-        onAuthenticated = (_, _) =>
+        onAuthenticated = (_, args) =>
         {
             navigation.Authenticated -= onAuthenticated;
-            ShowMain();
+            ShowMain(args.IsFirstLogin);
             window.Close();
         };
         navigation.Authenticated += onAuthenticated;
@@ -106,20 +112,37 @@ public partial class App : System.Windows.Application
         window.Start(firstRun);
     }
 
-    private void ShowMain()
+    private void ShowMain(bool firstLogin)
     {
-        var main = _host.Services.GetRequiredService<MainWindow>();
-        main.LogoutRequested += OnLogout;
-        main.Show();
+        var inactivity = _host.Services.GetRequiredService<InactivityLockService>();
+
+        _main = _host.Services.GetRequiredService<MainWindow>();
+        _main.LogoutRequested += (_, _) => ReturnToLogin();
+        inactivity.Locked += OnLocked;
+        inactivity.Start();
+
+        _main.Show();
+
+        if (firstLogin)
+            _host.Services.GetRequiredService<TourService>().Request();
     }
 
-    private void OnLogout(object? sender, EventArgs e)
+    private void OnLocked(object? sender, EventArgs e) => ReturnToLogin();
+
+    private void ReturnToLogin()
     {
-        var main = (MainWindow)sender!;
-        main.LogoutRequested -= OnLogout;
+        if (_main is null)
+            return;
+
+        var inactivity = _host.Services.GetRequiredService<InactivityLockService>();
+        inactivity.Stop();
+        inactivity.Locked -= OnLocked;
         _host.Services.GetRequiredService<IUserSession>().SignOut();
+
+        MainWindow closing = _main;
+        _main = null;
         ShowAuth();
-        main.Close();
+        closing.Close();
     }
 
     protected override async void OnExit(ExitEventArgs e)

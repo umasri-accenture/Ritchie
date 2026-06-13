@@ -8,7 +8,7 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="Richie"
-        Height="700" Width="1100"
+        Height="760" Width="1180"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
@@ -16,8 +16,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <ui:TitleBar Grid.Row="0" Title="Richie">
@@ -26,30 +26,93 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
-        <ui:NavigationView x:Name="RootNavigation"
-                           Grid.Row="1"
+        <!-- Topbar: notifications + profile -->
+        <Grid Grid.Row="1" Height="48">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                        VerticalAlignment="Center" Margin="0,0,12,0">
+                <ui:Button x:Name="NotificationsButton" Appearance="Transparent" Click="OnNotificationsClick">
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="Alert24" />
+                    </ui:Button.Icon>
+                </ui:Button>
+                <ui:Button x:Name="ProfileButton" Appearance="Transparent" Margin="4,0,0,0" Click="OnProfileClick">
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="Person24" />
+                    </ui:Button.Icon>
+                </ui:Button>
+            </StackPanel>
+
+            <Popup x:Name="NotificationsPopup" StaysOpen="False" AllowsTransparency="True"
+                   Placement="Bottom" PlacementTarget="{Binding ElementName=NotificationsButton}">
+                <ui:Card Margin="8" Width="300">
+                    <StackPanel>
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Notifications" />
+                        <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0" TextWrapping="Wrap"
+                                      Text="You're all caught up. Alerts and reminders arrive in Phase 9." />
+                    </StackPanel>
+                </ui:Card>
+            </Popup>
+
+            <Popup x:Name="ProfilePopup" StaysOpen="False" AllowsTransparency="True"
+                   Placement="Bottom" PlacementTarget="{Binding ElementName=ProfileButton}">
+                <ui:Card Margin="8" Width="240">
+                    <StackPanel>
+                        <ui:TextBlock x:Name="ProfileName" FontTypography="BodyStrong" Text="Signed in" />
+                        <ui:TextBlock Appearance="Secondary" Text="Local account" />
+                        <Separator Margin="0,8" />
+                        <ui:Button Content="Settings" Appearance="Transparent" HorizontalAlignment="Stretch"
+                                   HorizontalContentAlignment="Left" Click="OnSettingsClick" />
+                        <ui:Button Content="Help" Appearance="Transparent" HorizontalAlignment="Stretch"
+                                   HorizontalContentAlignment="Left" Click="OnHelpClick" />
+                        <ui:Button Content="Log out" Appearance="Transparent" HorizontalAlignment="Stretch"
+                                   HorizontalContentAlignment="Left" Click="OnLogoutClick" />
+                    </StackPanel>
+                </ui:Card>
+            </Popup>
+        </Grid>
+
+        <!-- Sidebar + content -->
+        <ui:NavigationView x:Name="RootNavigation" Grid.Row="2"
                            PaneDisplayMode="Left"
                            IsBackButtonVisible="Collapsed">
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="Dashboard"
-                                       TargetPageType="{x:Type pages:DashboardPage}">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:SymbolIcon Symbol="Home24" />
-                    </ui:NavigationViewItem.Icon>
+                <ui:NavigationViewItem Content="Dashboard" TargetPageType="{x:Type pages:DashboardPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Home24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Asset Documentation" TargetPageType="{x:Type pages:AssetDocumentationPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Wallet24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Expense Tracker" TargetPageType="{x:Type pages:ExpenseTrackerPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Money24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Password Vault" TargetPageType="{x:Type pages:PasswordVaultPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="LockClosed24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Financial Health Audit" TargetPageType="{x:Type pages:FinancialHealthAuditPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Heart24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Reports" TargetPageType="{x:Type pages:ReportsPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Document24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Export" TargetPageType="{x:Type pages:ExportPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Share24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
-            <ui:NavigationView.FooterMenuItems>
-                <ui:NavigationViewItem Content="Settings"
-                                       TargetPageType="{x:Type pages:SettingsPage}">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:SymbolIcon Symbol="Settings24" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-            </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
 
-        <Border Grid.Row="2" Padding="16,8" HorizontalAlignment="Right">
-            <ui:Button Content="Log out" Click="OnLogoutClick" />
+        <!-- App tour overlay -->
+        <Border x:Name="TourOverlay" Grid.RowSpan="3" Panel.ZIndex="100"
+                Background="#99000000" Visibility="Collapsed">
+            <ui:Card Width="440" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel>
+                    <ui:TextBlock x:Name="TourTitle" FontTypography="Subtitle" />
+                    <ui:TextBlock x:Name="TourBody" Appearance="Secondary" TextWrapping="Wrap" Margin="0,8,0,16" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ui:Button x:Name="TourSkip" Content="Skip" Margin="0,0,8,0" Click="OnTourSkip" />
+                        <ui:Button x:Name="TourNext" Content="Next" Appearance="Primary" Click="OnTourNext" />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
         </Border>
     </Grid>
 </ui:FluentWindow>
