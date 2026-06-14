@@ -43,6 +43,14 @@ public partial class PasswordVaultPage : Page
 
     private void OnAddEntry(object sender, RoutedEventArgs e) => OpenEditor(null);
 
+    private void OnPasswordHealth(object sender, RoutedEventArgs e)
+    {
+        var window = ((App)System.Windows.Application.Current).Services
+            .GetRequiredService<VaultHealthWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
+    }
+
     private void OnAccountLinkClick(object sender, RoutedEventArgs e)
     {
         if (sender is Hyperlink { Tag: string url } && !UrlLauncher.TryOpen(url))

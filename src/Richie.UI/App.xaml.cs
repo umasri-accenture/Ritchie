@@ -72,6 +72,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<PasswordVaultViewModel>();
                 services.AddTransient<AddEditVaultEntryViewModel>();
                 services.AddTransient<VaultReauthViewModel>();
+                services.AddTransient<VaultHealthViewModel>();
                 services.AddTransient<Views.Assets.AddEditAssetWindow>();
                 services.AddTransient<Views.Assets.AssetDetailsWindow>();
                 services.AddTransient<Views.Assets.SipScheduleWindow>();
@@ -85,6 +86,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Expenses.ExpenseAnalyticsWindow>();
                 services.AddTransient<Views.Vault.AddEditVaultEntryWindow>();
                 services.AddTransient<Views.Vault.VaultReauthWindow>();
+                services.AddTransient<Views.Vault.VaultHealthWindow>();
 
                 services.AddHostedService<Infrastructure.Assets.SipProcessingService>();
                 services.AddHostedService<Infrastructure.Expenses.RecurringExpenseProcessingService>();
