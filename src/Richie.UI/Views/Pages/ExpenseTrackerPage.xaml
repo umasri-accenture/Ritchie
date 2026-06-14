@@ -3,9 +3,96 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:controls="clr-namespace:Richie.UI.Controls"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
       Title="Expense Tracker">
-    <controls:ModulePlaceholder Title="Expense Tracker"
-                                Description="Record and analyse spending across fixed categories, with recurring expenses and budgets. Arrives in Phase 4." />
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <ui:TextBlock FontTypography="TitleLarge" Text="Expense Tracker" VerticalAlignment="Center" />
+            <ui:Button Content="Add expense" Appearance="Primary" HorizontalAlignment="Right" Click="OnAddExpense" />
+        </Grid>
+
+        <!-- Summary + insights -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="1.3*" />
+            </Grid.ColumnDefinitions>
+
+            <ui:Card Grid.Column="0">
+                <StackPanel>
+                    <ui:TextBlock Appearance="Secondary" Text="Spent this month" />
+                    <ui:TextBlock FontTypography="TitleLarge" Text="{Binding CurrentMonthText}" />
+                    <ui:TextBlock Appearance="Secondary" Margin="0,4,0,0" Text="{Binding MonthOverMonthText}" />
+                    <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0"
+                                  Text="{Binding TopCategoryText, StringFormat='Top category: {0}'}" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Grid.Column="2">
+                <StackPanel>
+                    <ui:TextBlock FontTypography="BodyStrong" Text="Insights" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding Insights}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,2" Text="{Binding}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ui:Card>
+        </Grid>
+
+        <!-- Filter bar -->
+        <Grid Grid.Row="2" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBox x:Name="SearchBox" PlaceholderText="Search" Width="160" Margin="0,0,8,0"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                <ComboBox Width="180" Margin="0,0,8,0" ItemsSource="{Binding CategoryFilters}"
+                          DisplayMemberPath="Text" SelectedItem="{Binding SelectedCategory}" />
+                <DatePicker Width="130" Margin="0,0,8,0" SelectedDate="{Binding FromDate}" />
+                <DatePicker Width="130" Margin="0,0,8,0" SelectedDate="{Binding ToDate}" />
+                <ui:TextBox PlaceholderText="Min" Width="80" Margin="0,0,8,0"
+                            Text="{Binding MinAmountText, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:TextBox PlaceholderText="Max" Width="80" Margin="0,0,8,0"
+                            Text="{Binding MaxAmountText, UpdateSourceTrigger=PropertyChanged}" />
+                <ui:Button Content="Apply" Margin="0,0,8,0" Click="OnApplyFilter" />
+                <ui:Button Content="Clear" Click="OnClearFilter" />
+            </StackPanel>
+        </Grid>
+
+        <!-- History -->
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
+                  IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="Auto" />
+                <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=N2}" Width="Auto" />
+                <DataGridTextColumn Header="Spent by" Binding="{Binding SpentBy}" Width="Auto" />
+                <DataGridTextColumn Header="Spent for" Binding="{Binding SpentFor}" Width="*" />
+                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="Edit" Padding="8,2" Margin="0,0,4,0"
+                                           Tag="{Binding Id}" Click="OnEditExpense" />
+                                <ui:Button Content="Delete" Padding="8,2"
+                                           Tag="{Binding Id}" Click="OnDeleteExpense" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </Page>

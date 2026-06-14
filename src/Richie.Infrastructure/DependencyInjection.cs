@@ -2,10 +2,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Richie.Application.Abstractions;
 using Richie.Application.Assets;
 using Richie.Application.Authentication;
+using Richie.Application.Expenses;
 using Richie.Application.Notifications;
 using Richie.Application.Security;
 using Richie.Application.Storage;
 using Richie.Infrastructure.Assets;
+using Richie.Infrastructure.Expenses;
 using Richie.Infrastructure.Authentication;
 using Richie.Infrastructure.Notifications;
 using Richie.Infrastructure.Persistence;
@@ -41,6 +43,7 @@ public static class DependencyInjection
         services.AddSingleton<IFileVault, FileVault>();
         services.AddSingleton<IAssetDocumentService, AssetDocumentService>();
         services.AddSingleton<IAssetImportService, AssetImportService>();
+        services.AddSingleton<IExpenseService, ExpenseService>();
         services.AddSingleton<INotificationService, NotificationService>();
         return services;
     }

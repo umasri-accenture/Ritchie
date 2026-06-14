@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Richie.Domain.Assets;
 using Richie.Domain.Auditing;
 using Richie.Domain.Authentication;
+using Richie.Domain.Expenses;
 using Richie.Domain.Notifications;
 
 namespace Richie.Infrastructure.Persistence;
@@ -24,6 +25,7 @@ public class RichieDbContext : DbContext
     public DbSet<AssetGoalLink> AssetGoalLinks => Set<AssetGoalLink>();
     public DbSet<SipSchedule> SipSchedules => Set<SipSchedule>();
     public DbSet<SipContribution> SipContributions => Set<SipContribution>();
+    public DbSet<Expense> Expenses => Set<Expense>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 

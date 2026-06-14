@@ -63,6 +63,8 @@ public partial class App : System.Windows.Application
                 services.AddTransient<AddEditGoalViewModel>();
                 services.AddTransient<DocumentsViewModel>();
                 services.AddTransient<BulkUploadViewModel>();
+                services.AddTransient<ExpenseTrackerViewModel>();
+                services.AddTransient<AddEditExpenseViewModel>();
                 services.AddTransient<Views.Assets.AddEditAssetWindow>();
                 services.AddTransient<Views.Assets.AssetDetailsWindow>();
                 services.AddTransient<Views.Assets.SipScheduleWindow>();
@@ -70,6 +72,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<Views.Assets.AddEditGoalWindow>();
                 services.AddTransient<Views.Assets.DocumentsWindow>();
                 services.AddTransient<Views.Assets.BulkUploadWindow>();
+                services.AddTransient<Views.Expenses.AddEditExpenseWindow>();
 
                 services.AddHostedService<Infrastructure.Assets.SipProcessingService>();
             })
