@@ -3,6 +3,7 @@ using Richie.Application.Abstractions;
 using Richie.Application.Assets;
 using Richie.Application.Audit;
 using Richie.Application.Authentication;
+using Richie.Application.Dashboard;
 using Richie.Application.Expenses;
 using Richie.Application.Insurance;
 using Richie.Application.Notifications;
@@ -65,6 +66,7 @@ public static class DependencyInjection
         services.AddSingleton<IHealthAuditService, Audit.HealthAuditService>();
         services.AddSingleton<IComplianceService, Audit.ComplianceService>();
         services.AddSingleton<IInsightGenerator, Audit.InsightGenerator>();
+        services.AddSingleton<IDashboardService, Dashboard.DashboardService>();
         return services;
     }
 }

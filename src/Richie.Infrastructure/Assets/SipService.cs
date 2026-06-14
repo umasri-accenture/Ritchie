@@ -92,6 +92,20 @@ public sealed class SipService : ISipService
         return dates;
     }
 
+    public IReadOnlyList<UpcomingSipDto> GetUpcomingSips(int withinDays = 30)
+    {
+        Guid userId = UserId;
+        DateTime cutoff = _clock.UtcNow.AddDays(withinDays);
+
+        using RichieDbContext db = _factory.Create();
+        return (from s in db.SipSchedules.AsNoTracking()
+                join a in db.Assets.AsNoTracking() on s.AssetId equals a.Id
+                where s.UserId == userId && s.IsEnabled && s.NextRunDateUtc <= cutoff
+                orderby s.NextRunDateUtc
+                select new UpcomingSipDto(a.Id, a.Name, s.Amount, s.NextRunDateUtc, s.Frequency))
+            .ToList();
+    }
+
     public IReadOnlyList<SipContributionDto> GetHistory(Guid assetId)
     {
         Guid userId = UserId;

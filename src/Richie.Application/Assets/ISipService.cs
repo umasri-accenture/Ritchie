@@ -9,6 +9,10 @@ public interface ISipService
     void SaveSchedule(Guid assetId, SipScheduleInput input);
 
     IReadOnlyList<DateTime> GetUpcomingInstallments(Guid assetId, int count = 4);
+
+    /// <summary>Enabled SIP instalments due within the next <paramref name="withinDays"/> days,
+    /// across all of the user's assets (for the Dashboard upcoming-SIPs panel).</summary>
+    IReadOnlyList<UpcomingSipDto> GetUpcomingSips(int withinDays = 30);
     IReadOnlyList<SipContributionDto> GetHistory(Guid assetId);
 
     /// <summary>

@@ -51,6 +51,9 @@ public partial class MainWindow : FluentWindow
         Loaded += (_, _) => RootNavigation.Navigate(typeof(DashboardPage));
     }
 
+    /// <summary>Navigate the shell to a page (used by Dashboard quick actions).</summary>
+    public void NavigateTo(Type pageType) => RootNavigation.Navigate(pageType);
+
     private void OnNotificationsClick(object sender, RoutedEventArgs e)
     {
         IReadOnlyList<NotificationDto> recent = _notifications.GetRecent(10);
