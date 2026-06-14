@@ -2,6 +2,7 @@ using System.Globalization;
 using Richie.Application.Abstractions;
 using Richie.Application.Assets;
 using Richie.Application.Expenses;
+using Richie.Application.Income;
 using Richie.Application.Insurance;
 using Richie.Application.Reports;
 using Richie.Application.Vault;
@@ -17,13 +18,14 @@ public sealed class ReportService : IReportService
     private readonly IGoalService _goals;
     private readonly IExpenseService _expenses;
     private readonly IExpenseAnalyticsService _expenseAnalytics;
+    private readonly IIncomeService _income;
     private readonly IVaultService _vault;
     private readonly IInsuranceService _insurance;
     private readonly IClock _clock;
 
     public ReportService(
         IAssetService assets, IValuationService valuation, IGoalService goals,
-        IExpenseService expenses, IExpenseAnalyticsService expenseAnalytics,
+        IExpenseService expenses, IExpenseAnalyticsService expenseAnalytics, IIncomeService income,
         IVaultService vault, IInsuranceService insurance, IClock clock)
     {
         _assets = assets;
@@ -31,6 +33,7 @@ public sealed class ReportService : IReportService
         _goals = goals;
         _expenses = expenses;
         _expenseAnalytics = expenseAnalytics;
+        _income = income;
         _vault = vault;
         _insurance = insurance;
         _clock = clock;
@@ -126,6 +129,20 @@ public sealed class ReportService : IReportService
                 ["Month", "Spend"],
                 _expenseAnalytics.GetMonthlyTotals(12).Select(m => (IReadOnlyList<string>)
                     [m.Label, Money(m.Amount)]).ToList()));
+
+        IReadOnlyList<IncomeSummary> income = _income.GetRecent(500);
+        decimal totalIncome = income.Sum(i => i.Amount);
+        var bySource = income
+            .GroupBy(i => i.Source)
+            .Select(g => (Source: g.Key, Amount: g.Sum(i => i.Amount)))
+            .OrderByDescending(x => x.Amount)
+            .ToList();
+        yield return new ReportSection("Income",
+            [$"Total income: {Money(totalIncome)} across {income.Count} entries",
+             $"Net (income − expenses): {Money(totalIncome - expenses.Sum(e => e.Amount))}"],
+            new ReportTable(
+                ["Source", "Amount"],
+                bySource.Select(s => (IReadOnlyList<string>)[s.Source, Money(s.Amount)]).ToList()));
     }
 
     private ReportSection VaultSection(bool unmasked)

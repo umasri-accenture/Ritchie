@@ -22,17 +22,12 @@ public partial class ExpenseTrackerPage : Page
 
     private void OnAddExpense(object sender, RoutedEventArgs e) => OpenEditor(null);
 
-    private void OnAddIncome(object sender, RoutedEventArgs e)
+    private void OnIncome(object sender, RoutedEventArgs e)
     {
-        var services = ((App)System.Windows.Application.Current).Services;
-        var window = services.GetRequiredService<AddIncomeWindow>();
+        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<IncomeWindow>();
         window.Owner = Window.GetWindow(this);
-        window.Editor.Initialize(null);
-        if (window.ShowDialog() == true)
-        {
-            Vm.Refresh();
-            services.GetRequiredService<ToastService>().Success("Income added.");
-        }
+        window.ShowDialog();
+        Vm.Refresh();   // monthly total + chart may have changed
     }
 
     private void OnBills(object sender, RoutedEventArgs e)

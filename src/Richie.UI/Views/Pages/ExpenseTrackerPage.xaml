@@ -23,7 +23,7 @@
                 <ui:Button Content="Analytics" Margin="0,0,8,0" Click="OnAnalytics" />
                 <ui:Button Content="Recurring" Margin="0,0,8,0" Click="OnRecurring" />
                 <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
-                <ui:Button Content="Add income" Margin="0,0,8,0" Click="OnAddIncome" />
+                <ui:Button Content="Income" Margin="0,0,8,0" Click="OnIncome" />
                 <ui:Button Content="Add expense" Appearance="Primary" Click="OnAddExpense" />
             </StackPanel>
         </Grid>

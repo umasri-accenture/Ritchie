@@ -37,9 +37,13 @@ public sealed class ReportServiceTests : IDisposable
         _vault = new VaultService(_db, _session, gate, _clock);
         _vault.Create(new VaultEntryInput("Gmail", "Email", null, "me@x.com", "S3cr3t!", null));
 
+        new Richie.Infrastructure.Income.IncomeService(_db, _session, _clock)
+            .Create(new Richie.Application.Income.IncomeInput(_clock.UtcNow, 5000m, "Salary", null));
+
         _sut = new ReportService(
             assets, new ValuationService(), new GoalService(_db, _session, _clock),
             new ExpenseService(_db, _session, _clock), new ExpenseAnalyticsService(_db, _session, _clock),
+            new Richie.Infrastructure.Income.IncomeService(_db, _session, _clock),
             _vault, new InsuranceService(_db, _session, _clock), _clock);
     }
 
@@ -73,6 +77,7 @@ public sealed class ReportServiceTests : IDisposable
         Assert.Contains(report.Sections, s => s.Heading == "Expenses by category");
         Assert.Contains(report.Sections, s => s.Heading == "Insurance policies");
         Assert.Contains(report.Sections, s => s.Heading == "Vault accounts");
+        Assert.Contains(report.Sections, s => s.Heading == "Income");
     }
 
     public void Dispose() => _db.Dispose();

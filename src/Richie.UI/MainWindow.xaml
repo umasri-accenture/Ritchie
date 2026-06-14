@@ -51,8 +51,9 @@
             </StackPanel>
 
             <Popup x:Name="NotificationsPopup" StaysOpen="False" AllowsTransparency="True"
-                   Placement="Bottom" PlacementTarget="{Binding ElementName=NotificationsButton}">
-                <ui:Card Margin="8" Width="360">
+                   Placement="Bottom" HorizontalOffset="-320" VerticalOffset="4"
+                   PlacementTarget="{Binding ElementName=NotificationsButton}">
+                <ui:Card Width="360" Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
                     <StackPanel>
                         <Grid>
                             <ui:TextBlock FontTypography="BodyStrong" Text="Notifications" VerticalAlignment="Center" />
@@ -88,8 +89,9 @@
             </Popup>
 
             <Popup x:Name="ProfilePopup" StaysOpen="False" AllowsTransparency="True"
-                   Placement="Bottom" PlacementTarget="{Binding ElementName=ProfileButton}">
-                <ui:Card Margin="8" Width="240">
+                   Placement="Bottom" HorizontalOffset="-200" VerticalOffset="4"
+                   PlacementTarget="{Binding ElementName=ProfileButton}">
+                <ui:Card Width="240" Background="{DynamicResource SolidBackgroundFillColorBaseBrush}">
                     <StackPanel>
                         <ui:TextBlock x:Name="ProfileName" FontTypography="BodyStrong" Text="Signed in" />
                         <ui:TextBlock Appearance="Secondary" Text="Local account" />

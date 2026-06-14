@@ -1,0 +1,58 @@
+<ui:FluentWindow x:Class="Richie.UI.Views.Expenses.IncomeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        mc:Ignorable="d"
+        Title="Income"
+        Height="600" Width="640"
+        WindowStartupLocation="CenterOwner"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        WindowCornerPreference="Round">
+    <ui:FluentWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Income" />
+
+        <Grid Grid.Row="1" Margin="24,8,24,12">
+            <StackPanel>
+                <ui:TextBlock Appearance="Secondary" Text="Income this month" />
+                <ui:TextBlock FontTypography="TitleLarge" Foreground="#0F7B0F" Text="{Binding MonthlyTotalText}" />
+            </StackPanel>
+            <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Add income"
+                       Appearance="Primary" Click="OnAddIncome" />
+        </Grid>
+
+        <DataGrid Grid.Row="2" Margin="24,0,24,16" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
+                  IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="Auto" />
+                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="*" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=N2}" Width="Auto" />
+                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="Edit" Padding="8,2" Margin="0,0,4,0" Tag="{Binding Id}" Click="OnEditIncome" />
+                                <ui:Button Content="Delete" Padding="8,2" Tag="{Binding Id}" Click="OnDeleteIncome" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <ui:TextBlock Grid.Row="2" Margin="24" VerticalAlignment="Top" Appearance="Secondary"
+                      Text="No income recorded yet. Click Add income to start."
+                      Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
+    </Grid>
+</ui:FluentWindow>
