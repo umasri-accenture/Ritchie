@@ -54,6 +54,7 @@ public static class DependencyInjection
         services.AddSingleton<IVaultGate, VaultGate>();
         services.AddSingleton<IVaultService, VaultService>();
         services.AddSingleton<IVaultHealthService, VaultHealthService>();
+        services.AddSingleton<IVaultImportService, VaultImportService>();
         return services;
     }
 }

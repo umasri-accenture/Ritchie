@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Richie.Application.Vault;
 using Richie.UI.Services;
 using Richie.UI.ViewModels;
 using Richie.UI.Views.Vault;
@@ -49,6 +50,17 @@ public partial class PasswordVaultPage : Page
             .GetRequiredService<VaultHealthWindow>();
         window.Owner = Window.GetWindow(this);
         window.ShowDialog();
+    }
+
+    private void OnBulkUpload(object sender, RoutedEventArgs e)
+    {
+        var services = ((App)System.Windows.Application.Current).Services;
+        var window = services.GetRequiredService<Richie.UI.Views.Assets.BulkUploadWindow>();
+        window.Owner = Window.GetWindow(this);
+        window.Upload.Initialize(services.GetRequiredService<IVaultImportService>(), "Bulk upload passwords");
+        window.ShowDialog();
+        if (window.Upload.ImportedAny)
+            Vm.Reload();
     }
 
     private void OnAccountLinkClick(object sender, RoutedEventArgs e)
