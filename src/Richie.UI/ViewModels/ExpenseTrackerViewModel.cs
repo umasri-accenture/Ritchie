@@ -78,11 +78,23 @@ public partial class ExpenseTrackerViewModel : ObservableObject
 
         IncomeExpenseSeries =
         [
-            new ColumnSeries<double> { Name = "Income", Values = income.Select(d => (double)d.Amount).ToArray(), Fill = new SolidColorPaint(GreenColor) },
-            new ColumnSeries<double> { Name = "Expense", Values = expense.Select(d => (double)d.Amount).ToArray(), Fill = new SolidColorPaint(RedColor) }
+            TrendLine("Income", income, GreenColor),
+            TrendLine("Expense", expense, RedColor)
         ];
         IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 30 }];
     }
+
+    private static LineSeries<double> TrendLine(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()
+    {
+        Name = name,
+        Values = data.Select(d => (double)d.Amount).ToArray(),
+        Stroke = new SolidColorPaint(color) { StrokeThickness = 2 },
+        GeometryStroke = new SolidColorPaint(color) { StrokeThickness = 2 },
+        GeometryFill = new SolidColorPaint(color),
+        GeometrySize = 8,
+        Fill = null,                 // trend line, not a filled area
+        LineSmoothness = 0.6         // smooth trend
+    };
 
     public void ApplyFilter()
     {
