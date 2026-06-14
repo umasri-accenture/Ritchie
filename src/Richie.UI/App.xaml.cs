@@ -25,6 +25,11 @@ public partial class App : System.Windows.Application
 
     public App()
     {
+        // Keep every window/dialog within the visible screen (content already scrolls). Done as a
+        // class handler — NOT a window Style — so the WPF-UI FluentWindow template/backdrop is untouched.
+        EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent,
+            new RoutedEventHandler(OnAnyWindowLoaded));
+
         string logDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Richie", "logs");
@@ -113,6 +118,17 @@ public partial class App : System.Windows.Application
 
     /// <summary>Service provider for views that resolve their view-models / dialogs.</summary>
     public IServiceProvider Services => _host.Services;
+
+    // Cap only modal dialogs (which have an Owner) to the app window's size, so popups can't exceed
+    // the app. The main/auth/splash windows have no Owner, so they stay freely resizable/maximizable.
+    private static void OnAnyWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is Window { Owner: { ActualHeight: > 0 } owner } dialog)
+        {
+            dialog.MaxHeight = owner.ActualHeight;
+            dialog.MaxWidth = owner.ActualWidth;
+        }
+    }
 
     /// <summary>Requested from the Help page to replay the app tour.</summary>
     public void RequestTour() => _host.Services.GetRequiredService<TourService>().Request();

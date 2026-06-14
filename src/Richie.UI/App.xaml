@@ -9,12 +9,6 @@
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
-
-            <!-- Keep every window (and dialog) within the visible screen work area. -->
-            <Style TargetType="{x:Type ui:FluentWindow}" BasedOn="{StaticResource {x:Type ui:FluentWindow}}">
-                <Setter Property="MaxHeight" Value="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}" />
-                <Setter Property="MaxWidth" Value="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}" />
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
