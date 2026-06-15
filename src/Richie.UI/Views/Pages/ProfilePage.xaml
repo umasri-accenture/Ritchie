@@ -11,7 +11,7 @@
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
             <StackPanel MaxWidth="640" HorizontalAlignment="Left">
-                <ui:TextBlock FontTypography="TitleLarge" Text="Profile" Margin="0,0,0,12" />
+                <ui:TextBlock FontTypography="TitleLarge" Text="Profile" Foreground="White" Margin="0,0,0,12" />
 
                 <ui:Card Margin="0,0,0,12">
                     <StackPanel>

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using Microsoft.Win32;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Richie.Application.Assets;
 using Richie.Application.Common;
@@ -72,9 +73,30 @@ public partial class SettingsViewModel : ObservableObject
         _assets.SetAllJewelleryExclusion(!IncludeJewelleryInPortfolio);
     }
 
+    /// <summary>Detects the system theme preference from Windows registry.</summary>
+    public static string GetSystemTheme()
+    {
+        try
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"))
+            {
+                if (key?.GetValue("AppsUseLightTheme") is int value && value == 0)
+                    return "Dark";
+            }
+        }
+        catch
+        {
+            // If registry access fails, default to Light
+        }
+        return "Light";
+    }
+
     public static void ApplyTheme(string theme)
     {
-        switch (theme)
+        // If "System" is selected, detect actual system preference
+        string actualTheme = theme == "System" ? GetSystemTheme() : theme;
+
+        switch (actualTheme)
         {
             case "Dark": ApplicationThemeManager.Apply(ApplicationTheme.Dark); break;
             case "Light": ApplicationThemeManager.Apply(ApplicationTheme.Light); break;
@@ -85,15 +107,15 @@ public partial class SettingsViewModel : ObservableObject
         ApplyBrandAccent();
     }
 
-    /// <summary>Applies the Richie-Red brand accent across the app (buttons, nav highlight, focus rings).</summary>
+    /// <summary>Applies a professional brand accent across the app (buttons, nav highlight, focus rings).</summary>
     public static void ApplyBrandAccent()
     {
-        var accent = (Color)ColorConverter.ConvertFromString(BrandColors.Primary)!;
-        // Before a theme is applied (e.g. at startup) GetAppTheme() is Unknown — applying the accent
-        // against Unknown leaves accent-based controls (Primary buttons) rendering greyed/disabled.
         ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
         if (theme is ApplicationTheme.Unknown)
             theme = ApplicationTheme.Light;
+
+        // Use a professional blue/teal accent instead of red for modern UI
+        var accent = (Color)ColorConverter.ConvertFromString("#3B82F6")!; // Professional blue
         ApplicationAccentColorManager.Apply(accent, theme);
     }
 

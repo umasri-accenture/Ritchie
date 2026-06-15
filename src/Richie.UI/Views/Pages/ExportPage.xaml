@@ -12,7 +12,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TextBlock Grid.Row="0" FontTypography="TitleLarge" Text="Export" Margin="0,0,0,12" />
+        <ui:TextBlock Grid.Row="0" FontTypography="TitleLarge" Text="Export" Foreground="White" Margin="0,0,0,12" />
 
         <ui:Card Grid.Row="1" VerticalAlignment="Top">
             <StackPanel>

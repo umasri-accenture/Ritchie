@@ -1,0 +1,48 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <!-- =====================================
+         PROFESSIONAL DRACULA-INSPIRED DARK THEME
+         Colors: Dark purplish background with excellent contrast
+         Accent: Professional Blue (#3B82F6) instead of Red
+         ===================================== -->
+
+    <!-- Primary Dark Mode Colors with excellent contrast -->
+    <Color x:Key="DarkBg">#1E1E2E</Color>               <!-- Main background: Dark purple-black -->
+    <Color x:Key="DarkCardBg">#282A36</Color>           <!-- Card/container background -->
+    <Color x:Key="DarkSecondaryBg">#313244</Color>      <!-- Secondary container -->
+    <Color x:Key="DarkTertiaryBg">#3A3D48</Color>       <!-- Hover/tertiary -->
+    <Color x:Key="DarkBorder">#44475A</Color>           <!-- Border color -->
+    <Color x:Key="DarkText">#F8F8F2</Color>             <!-- Primary text: Nearly white (98% white) -->
+    <Color x:Key="DarkSecondaryText">#E8E8E8</Color>    <!-- Secondary text: Light gray -->
+    <Color x:Key="DarkTertiaryText">#B8B8B8</Color>     <!-- Tertiary text/disabled -->
+    <Color x:Key="DarkPlaceholder">#808080</Color>     <!-- Placeholder text -->
+
+    <!-- Accent & Status Colors -->
+    <Color x:Key="DarkAccent">#3B82F6</Color>           <!-- Professional Blue -->
+    <Color x:Key="DarkAccentHover">#2563EB</Color>      <!-- Darker Blue on hover -->
+    <Color x:Key="DarkAccentActive">#1D4ED8</Color>     <!-- Active/pressed -->
+    <Color x:Key="DarkSuccess">#22C55E</Color>          <!-- Green success -->
+    <Color x:Key="DarkWarning">#F59E0B</Color>          <!-- Amber warning -->
+    <Color x:Key="DarkDanger">#EF4444</Color>           <!-- Red danger (muted) -->
+
+    <!-- Convert colors to brushes for easy reuse -->
+    <SolidColorBrush x:Key="DarkBgBrush" Color="{StaticResource DarkBg}" />
+    <SolidColorBrush x:Key="DarkCardBgBrush" Color="{StaticResource DarkCardBg}" />
+    <SolidColorBrush x:Key="DarkSecondaryBgBrush" Color="{StaticResource DarkSecondaryBg}" />
+    <SolidColorBrush x:Key="DarkTertiaryBgBrush" Color="{StaticResource DarkTertiaryBg}" />
+    <SolidColorBrush x:Key="DarkBorderBrush" Color="{StaticResource DarkBorder}" />
+    <SolidColorBrush x:Key="DarkTextBrush" Color="{StaticResource DarkText}" />
+    <SolidColorBrush x:Key="DarkSecondaryTextBrush" Color="{StaticResource DarkSecondaryText}" />
+    <SolidColorBrush x:Key="DarkTertiaryTextBrush" Color="{StaticResource DarkTertiaryText}" />
+    <SolidColorBrush x:Key="DarkPlaceholderBrush" Color="{StaticResource DarkPlaceholder}" />
+    <SolidColorBrush x:Key="DarkAccentBrush" Color="{StaticResource DarkAccent}" />
+    <SolidColorBrush x:Key="DarkAccentHoverBrush" Color="{StaticResource DarkAccentHover}" />
+    <SolidColorBrush x:Key="DarkAccentActiveBrush" Color="{StaticResource DarkAccentActive}" />
+    <SolidColorBrush x:Key="DarkSuccessBrush" Color="{StaticResource DarkSuccess}" />
+    <SolidColorBrush x:Key="DarkWarningBrush" Color="{StaticResource DarkWarning}" />
+    <SolidColorBrush x:Key="DarkDangerBrush" Color="{StaticResource DarkDanger}" />
+
+</ResourceDictionary>

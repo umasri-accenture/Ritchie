@@ -17,7 +17,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TextBlock Grid.Row="0" FontTypography="TitleLarge" Text="Reports" Margin="0,0,0,12" />
+        <ui:TextBlock Grid.Row="0" FontTypography="TitleLarge" Text="Reports" Foreground="White" Margin="0,0,0,12" />
 
         <!-- Controls -->
         <Grid Grid.Row="1" Margin="0,0,0,12">

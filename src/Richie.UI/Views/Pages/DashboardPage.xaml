@@ -25,12 +25,12 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="{Binding HeroDateText}" />
-                        <ui:TextBlock FontTypography="TitleLarge" Margin="0,2,0,0" Text="{Binding GreetingText}" />
+                        <ui:TextBlock FontTypography="TitleLarge" Foreground="White" Margin="0,2,0,0" Text="{Binding GreetingText}" />
                         <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,6,12,0"
                                       Text="{Binding PortfolioInsightText}" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
-                        <ui:TextBlock x:Name="ClockText" FontTypography="TitleLarge" HorizontalAlignment="Right" />
+                        <ui:TextBlock x:Name="ClockText" FontTypography="TitleLarge" Foreground="White" HorizontalAlignment="Right" />
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption"
                                       HorizontalAlignment="Right" Text="Local time" />
                     </StackPanel>
