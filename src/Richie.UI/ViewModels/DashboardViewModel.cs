@@ -8,6 +8,7 @@ using Richie.Application.Assets;
 using Richie.Application.Audit;
 using Richie.Application.Dashboard;
 using Richie.Application.Expenses;
+using Richie.UI.Charts;
 
 namespace Richie.UI.ViewModels;
 
@@ -92,11 +93,13 @@ public partial class DashboardViewModel : ObservableObject
         IReadOnlyList<AllocationSlice> allocation = _assets.GetPortfolioSummary().Allocation;
         HasAssets = allocation.Count > 0;
         AllocationSeries = allocation
-            .Select(a => (ISeries)new PieSeries<double> { Values = [(double)a.Value], Name = a.TypeName, InnerRadius = 55 })
+            .Select((a, i) => (ISeries)new PieSeries<double>
+                { Values = [(double)a.Value], Name = a.TypeName, InnerRadius = 55, Fill = BrandPalette.Categorical(i) })
             .ToArray();
 
         IReadOnlyList<PeriodDatum> months = _analytics.GetMonthlyTotals(6);
-        MonthlySeries = [new ColumnSeries<double> { Values = months.Select(m => (double)m.Amount).ToArray(), Name = "Spend" }];
+        MonthlySeries = [new ColumnSeries<double>
+            { Values = months.Select(m => (double)m.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
         MonthlyAxes = [new Axis { Labels = months.Select(m => m.Label).ToArray(), LabelsRotation = 30 }];
     }
 

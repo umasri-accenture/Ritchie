@@ -37,7 +37,9 @@
                 </StackPanel>
                 <ui:Button Content="Generate preview" VerticalAlignment="Bottom" Margin="0,0,8,0" Click="OnGeneratePreview" />
                 <ui:Button Content="Export PDF" Appearance="Primary" VerticalAlignment="Bottom" Margin="0,0,8,0" Click="OnExportPdf" />
-                <ui:Button Content="Export PPTX" VerticalAlignment="Bottom" Click="OnExportPptx" />
+                <ui:Button Content="Export PPTX" VerticalAlignment="Bottom" Margin="0,0,8,0" Click="OnExportPptx" />
+                <ui:Button Content="Export Excel" VerticalAlignment="Bottom" Margin="0,0,8,0" Click="OnExportXlsx" />
+                <ui:Button Content="Export CSV" VerticalAlignment="Bottom" Click="OnExportCsv" />
             </StackPanel>
         </Grid>
 

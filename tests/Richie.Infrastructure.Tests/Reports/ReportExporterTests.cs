@@ -54,6 +54,45 @@ public sealed class ReportExporterTests
     }
 
     [Fact]
+    public void ToXlsx_ProducesAWorkbook_WithOneSheetPerSectionPlusMeta()
+    {
+        byte[] xlsx = new ReportExporter().ToXlsx(Sample());
+
+        Assert.Equal("PK", Encoding.ASCII.GetString(xlsx, 0, 2));   // zip/OOXML header
+
+        using var ms = new MemoryStream(xlsx);
+        using var wb = new ClosedXML.Excel.XLWorkbook(ms);
+        // "Report" meta sheet + one per section.
+        Assert.Equal(3, wb.Worksheets.Count);
+        ClosedXML.Excel.IXLWorksheet summary = wb.Worksheet("Summary");
+        Assert.Equal("Summary", summary.Cell(1, 1).GetString());          // heading
+        Assert.Contains("Acme", summary.RowsUsed().SelectMany(r => r.CellsUsed()).Select(c => c.GetString()));
+    }
+
+    [Fact]
+    public void ToCsv_FlattensHeadingsLinesAndTables()
+    {
+        byte[] csv = new ReportExporter().ToCsv(Sample());
+        string text = Encoding.UTF8.GetString(csv);
+
+        Assert.Contains("Test Report", text);
+        Assert.Contains("Summary", text);
+        Assert.Contains("Name,Value", text);   // table header
+        Assert.Contains("Acme", text);
+    }
+
+    [Fact]
+    public void ToCsv_QuotesFieldsContainingCommas()
+    {
+        var content = new ReportContent("T", DateTime.UtcNow, "All data",
+            [new ReportSection("S", [], new ReportTable(["A", "B"], [["x,y", "z"]]))]);
+
+        string text = Encoding.UTF8.GetString(new ReportExporter().ToCsv(content));
+
+        Assert.Contains("\"x,y\",z", text);
+    }
+
+    [Fact]
     public void ToPptx_WithCharts_AddsChartSlidesAndImages()
     {
         byte[] pptx = new ReportExporter().ToPptx(SampleWithCharts());

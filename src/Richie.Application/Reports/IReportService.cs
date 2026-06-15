@@ -36,4 +36,10 @@ public interface IReportExporter
 {
     byte[] ToPdf(ReportContent content);
     byte[] ToPptx(ReportContent content);
+
+    /// <summary>Excel workbook — one worksheet per section (charts omitted; data shown as tables).</summary>
+    byte[] ToXlsx(ReportContent content);
+
+    /// <summary>Flat CSV — sections serialised sequentially (charts omitted; data shown as tables).</summary>
+    byte[] ToCsv(ReportContent content);
 }

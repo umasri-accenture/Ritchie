@@ -5,9 +5,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using Richie.Application.Common;
 using Richie.Application.Expenses;
 using Richie.Application.Income;
 using Richie.Domain.Expenses;
+using Richie.UI.Charts;
 using SkiaSharp;
 
 namespace Richie.UI.ViewModels;
@@ -18,10 +20,8 @@ public partial class ExpenseTrackerViewModel : ObservableObject
     private readonly IIncomeService _income;
     private readonly IExpenseAnalyticsService _analytics;
 
-    private static readonly SKColor GreenColor = new(0x0F, 0x7B, 0x0F);
-    private static readonly SKColor RedColor = new(0xC4, 0x2B, 0x1C);
-    public Brush SpendBrush { get; } = new SolidColorBrush(Color.FromRgb(0xC4, 0x2B, 0x1C));
-    public Brush IncomeBrush { get; } = new SolidColorBrush(Color.FromRgb(0x0F, 0x7B, 0x0F));
+    public Brush SpendBrush { get; } = new SolidColorBrush((Color)ColorConverter.ConvertFromString(BrandColors.Danger)!);
+    public Brush IncomeBrush { get; } = new SolidColorBrush((Color)ColorConverter.ConvertFromString(BrandColors.Success)!);
 
     public sealed record CategoryFilterOption(ExpenseCategory? Value, string Text);
 
@@ -78,8 +78,8 @@ public partial class ExpenseTrackerViewModel : ObservableObject
 
         IncomeExpenseSeries =
         [
-            TrendLine("Income", income, GreenColor),
-            TrendLine("Expense", expense, RedColor)
+            TrendLine("Income", income, BrandPalette.Success),
+            TrendLine("Expense", expense, BrandPalette.Danger)
         ];
         IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 30 }];
     }

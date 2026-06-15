@@ -29,6 +29,10 @@ public partial class ReportsPage : Page
 
     private void OnExportPptx(object sender, RoutedEventArgs e) => Export("pptx");
 
+    private void OnExportXlsx(object sender, RoutedEventArgs e) => Export("xlsx");
+
+    private void OnExportCsv(object sender, RoutedEventArgs e) => Export("csv");
+
     private void Export(string format)
     {
         var services = ((App)System.Windows.Application.Current).Services;
@@ -63,12 +67,26 @@ public partial class ReportsPage : Page
         {
             ReportContent content = Vm.BuildForExport(unmask);
             var exporter = services.GetRequiredService<IReportExporter>();
-            byte[] bytes = format == "pdf" ? exporter.ToPdf(content) : exporter.ToPptx(content);
+            byte[] bytes = format switch
+            {
+                "pdf" => exporter.ToPdf(content),
+                "pptx" => exporter.ToPptx(content),
+                "xlsx" => exporter.ToXlsx(content),
+                "csv" => exporter.ToCsv(content),
+                _ => throw new ArgumentOutOfRangeException(nameof(format))
+            };
 
             var dialog = new SaveFileDialog
             {
                 FileName = Vm.SuggestedFileName(format),
-                Filter = format == "pdf" ? "PDF document|*.pdf" : "PowerPoint|*.pptx"
+                Filter = format switch
+                {
+                    "pdf" => "PDF document|*.pdf",
+                    "pptx" => "PowerPoint|*.pptx",
+                    "xlsx" => "Excel workbook|*.xlsx",
+                    "csv" => "CSV file|*.csv",
+                    _ => "All files|*.*"
+                }
             };
             if (dialog.ShowDialog(Window.GetWindow(this)) == true)
             {

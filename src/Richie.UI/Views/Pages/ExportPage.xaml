@@ -21,7 +21,9 @@
                               Text="Exports your full portfolio (assets, expenses, insurance and the vault with passwords MASKED). For specific report types, section selection, or unmasked passwords, use the Reports page." />
                 <StackPanel Orientation="Horizontal">
                     <ui:Button Content="Export PDF" Appearance="Primary" Margin="0,0,8,0" Click="OnExportPdf" />
-                    <ui:Button Content="Export PPTX" Click="OnExportPptx" />
+                    <ui:Button Content="Export PPTX" Margin="0,0,8,0" Click="OnExportPptx" />
+                    <ui:Button Content="Export Excel" Margin="0,0,8,0" Click="OnExportXlsx" />
+                    <ui:Button Content="Export CSV" Click="OnExportCsv" />
                 </StackPanel>
             </StackPanel>
         </ui:Card>

@@ -6,6 +6,7 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Richie.Application.Expenses;
 using Richie.Domain.Expenses;
+using Richie.UI.Charts;
 
 namespace Richie.UI.ViewModels;
 
@@ -77,14 +78,16 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
         IReadOnlyList<CategoryDatum> data = _analytics.GetCategoryDistribution(SelectedPeriod);
         HasCategoryData = data.Count > 0;
         CategorySeries = data
-            .Select(d => (ISeries)new PieSeries<double> { Values = [(double)d.Amount], Name = d.CategoryName, InnerRadius = 50 })
+            .Select((d, i) => (ISeries)new PieSeries<double>
+                { Values = [(double)d.Amount], Name = d.CategoryName, InnerRadius = 50, Fill = BrandPalette.Categorical(i) })
             .ToArray();
     }
 
     private void BuildMonthly()
     {
         IReadOnlyList<PeriodDatum> data = _analytics.GetMonthlyTotals(12);
-        MonthlySeries = [new ColumnSeries<double> { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend" }];
+        MonthlySeries = [new ColumnSeries<double>
+            { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
         MonthlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 30 }];
     }
 
@@ -92,7 +95,8 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
     {
         IReadOnlyList<PeriodDatum> data = _analytics.GetYearlyTotals();
         HasYearlyData = data.Count > 0;
-        YearlySeries = [new ColumnSeries<double> { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend" }];
+        YearlySeries = [new ColumnSeries<double>
+            { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
         YearlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray() }];
     }
 
