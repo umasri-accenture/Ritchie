@@ -89,7 +89,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Asset Documentation"
-                          Foreground="White" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+                          Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button Width="135" Height="36" Margin="0,0,8,0" Click="OnOpenGoals" ToolTip="View financial goals">
                     <StackPanel Orientation="Horizontal">
@@ -135,11 +135,11 @@
                     <UniformGrid Columns="2">
                         <StackPanel Margin="0,0,4,0">
                             <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Invested" />
-                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalInvestedValueText}" Foreground="#475569" />
+                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalInvestedValueText}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                         <StackPanel Margin="4,0,0,0">
                             <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Current" />
-                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalCurrentValueText}" Foreground="#475569" />
+                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalCurrentValueText}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                     </UniformGrid>
                     
@@ -281,7 +281,7 @@
                 <StackPanel>
                     <ui:TextBlock Appearance="Secondary" FontSize="13" FontTypography="Caption" Text="TOP PERFORMING ASSET" FontWeight="SemiBold" />
                     
-                    <ui:TextBlock FontSize="20" FontWeight="Bold" Margin="0,6,0,2" Text="{Binding TopPerformingAssetName}" TextTrimming="CharacterEllipsis" Foreground="#1E293B" Height="26" />
+                    <ui:TextBlock FontSize="20" FontWeight="Bold" Margin="0,6,0,2" Text="{Binding TopPerformingAssetName}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Height="26" />
                     
                     <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                         <ui:SymbolIcon Symbol="DataTrending24" FontSize="18" Foreground="#0F766E" Margin="0,0,4,0" VerticalAlignment="Center" />
@@ -293,7 +293,7 @@
                     <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Highest rate of return" />
                 </StackPanel>
             </ui:Card>
-  
+            
             <!-- 4. Asset Allocation Insights Card -->
             <ui:Card Grid.Column="6" Padding="12" VerticalAlignment="Stretch">
                 <StackPanel>
@@ -305,7 +305,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ui:SymbolIcon Symbol="Lightbulb24" FontSize="22" Foreground="#F59E0B" Margin="0,1,6,0" VerticalAlignment="Top" />
-                        <ui:TextBlock Grid.Column="1" Text="{Binding InsightText}" FontSize="14" Foreground="#475569" TextWrapping="Wrap" LineHeight="18" />
+                        <ui:TextBlock Grid.Column="1" Text="{Binding InsightText}" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" LineHeight="18" />
                     </Grid>
                 </StackPanel>
             </ui:Card>
@@ -347,10 +347,10 @@
                                             <Ellipse Grid.Column="0" Width="10" Height="10" Fill="{Binding Swatch}"
                                                      VerticalAlignment="Center" Margin="0,0,6,0" />
                                             <ui:TextBlock Grid.Column="1" FontSize="13.5" VerticalAlignment="Center" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis">
-                                                <Run Text="{Binding TypeName}" Foreground="#334155" />
+                                                <Run Text="{Binding TypeName}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                             </ui:TextBlock>
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                                <ui:TextBlock Text="{Binding ValueText}" FontSize="13.5" Foreground="#475569" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                <ui:TextBlock Text="{Binding ValueText}" FontSize="13.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="SemiBold" VerticalAlignment="Center" />
                                                 <ui:TextBlock Text="{Binding PercentText}" FontSize="13.5" Foreground="#0F766E" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </Grid>
@@ -370,19 +370,19 @@
                     <UniformGrid Columns="2" Rows="2">
                         <StackPanel Margin="0,1">
                             <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Largest Asset Category" />
-                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding LargestAsset}" Foreground="#1E293B" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding LargestAsset}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         </StackPanel>
                         <StackPanel Margin="0,1">
                             <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Portfolio Concentration" />
-                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding PortfolioConcentration}" Foreground="#1E293B" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding PortfolioConcentration}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         </StackPanel>
                         <StackPanel Margin="0,1">
                             <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Number of Asset Categories" />
-                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding NumberOfCategories}" Foreground="#1E293B" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding NumberOfCategories}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         </StackPanel>
                         <StackPanel Margin="0,1">
                             <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Most Diversified Category" />
-                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding MostDiversifiedCategory}" Foreground="#1E293B" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding MostDiversifiedCategory}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         </StackPanel>
                     </UniformGrid>
                 </StackPanel>
@@ -419,16 +419,16 @@
                                 <ui:TextBlock FontSize="13" Appearance="Secondary" Text="DOCUMENT COVERAGE" FontWeight="SemiBold" />
                                 <ui:TextBlock Grid.Column="1" FontSize="14.5" FontWeight="Bold" Foreground="#0F766E">
                                     <Run Text="{Binding DocumentedAssetCount, Mode=OneWay}" />
-                                    <Run Text="of" Foreground="#475569" FontWeight="Normal" />
+                                    <Run Text="of" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="Normal" />
                                     <Run Text="{Binding TotalAssetCount, Mode=OneWay}" />
-                                    <Run Text="assets" Foreground="#475569" FontWeight="Normal" />
+                                    <Run Text="assets" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="Normal" />
                                 </ui:TextBlock>
                             </Grid>
                             
                             <!-- Progress Bar -->
                             <ProgressBar Grid.Row="1" Value="{Binding DocumentCoveragePercent, Mode=OneWay}" Minimum="0" Maximum="100" Height="8" Background="#F1F5F9" Foreground="#2563EB" BorderThickness="0" Margin="0,4,0,4" />
                             
-                            <ui:TextBlock Grid.Row="2" FontSize="12.5" Foreground="#475569">
+                            <ui:TextBlock Grid.Row="2" FontSize="12.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
                                 <Run Text="{Binding DocumentCoveragePercent, Mode=OneWay, StringFormat='{}{0}% of your assets have attachments verified.'}" />
                             </ui:TextBlock>
                         </Grid>
@@ -455,7 +455,7 @@
                             </Style>
                         </Grid.Style>
                         
-                        <ui:TextBlock Grid.Row="0" FontSize="14.5" FontWeight="SemiBold" Text="Undocumented Assets" Margin="0,0,0,4" Foreground="#1E293B" />
+                        <ui:TextBlock Grid.Row="0" FontSize="14.5" FontWeight="SemiBold" Text="Undocumented Assets" Margin="0,0,0,4" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                             <ItemsControl ItemsSource="{Binding UndocumentedAssets}">
@@ -469,7 +469,7 @@
                                             </Grid.ColumnDefinitions>
                                             <ui:SymbolIcon Grid.Column="0" Symbol="Warning24" FontSize="16" Foreground="#EA580C" Margin="0,0,8,0" VerticalAlignment="Center" />
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <ui:TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold" Foreground="#1E293B" TextTrimming="CharacterEllipsis" />
+                                                <ui:TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextTrimming="CharacterEllipsis" />
                                                 <ui:TextBlock Text="{Binding TypeName}" FontSize="11.5" Appearance="Secondary" />
                                             </StackPanel>
                                             <ui:Button Grid.Column="2" Content="Add file"
@@ -521,23 +521,19 @@
         <!-- Asset list with compact density and sticky headers -->
         <DataGrid Grid.Row="3" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
                   IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column"
-                  GridLinesVisibility="Horizontal" RowBackground="White"
+                  GridLinesVisibility="Horizontal"
                   Background="Transparent" BorderThickness="0"
                   HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                   VerticalContentAlignment="Center" FontSize="16.5"
                   CanUserResizeColumns="True">
             <DataGrid.Resources>
-                <!-- Override the default system selection colors with subtle premium highlight brushes -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#F1F5F9" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#1E293B" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#F8FAFC" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#475569" />
-                
                 <!-- Reduce cell padding and align content vertically -->
                 <Style TargetType="DataGridCell">
                     <Setter Property="Padding" Value="8,6" />
                     <Setter Property="VerticalAlignment" Value="Center" />
                     <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="DataGridCell">
@@ -547,15 +543,21 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
                 <!-- Column header style -->
                 <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="#F8FAFC" />
-                    <Setter Property="Foreground" Value="#475569" />
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
                     <Setter Property="FontWeight" Value="SemiBold" />
                     <Setter Property="Padding" Value="8,8" />
                     <Setter Property="BorderThickness" Value="0,0,0,1" />
-                    <Setter Property="BorderBrush" Value="#E2E8F0" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
                     <Setter Property="Height" Value="42" />
                     <Setter Property="FontSize" Value="16" />
                 </Style>
@@ -563,7 +565,7 @@
                 <Style TargetType="DataGridRow">
                     <Setter Property="Height" Value="42" />
                     <Setter Property="BorderThickness" Value="0,0,0,1" />
-                    <Setter Property="BorderBrush" Value="#F1F5F9" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
                 </Style>
             </DataGrid.Resources>
             
@@ -572,10 +574,10 @@
                 <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" MinWidth="100" />
                 <DataGridTextColumn Header="Identifier" Binding="{Binding Identifier}" Width="*" />
                 
-                <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat='₹{0:N2}'}" Width="Auto">
+                 <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat='₹{0:N2}'}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="#475569" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
                             <Setter Property="FontWeight" Value="Medium" />
                             <Setter Property="HorizontalAlignment" Value="Right" />
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -586,7 +588,7 @@
                 <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat='₹{0:N2}'}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="#475569" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
                             <Setter Property="FontWeight" Value="Medium" />
                             <Setter Property="HorizontalAlignment" Value="Right" />
                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -615,27 +617,44 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                
-                <DataGridTemplateColumn Header="Excl." Width="Auto">
+                             <DataGridTemplateColumn Header="Excl." Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsExcludedFromPortfolio, Mode=OneWay}"
-                                      Click="OnExclClick"
-                                      Tag="{Binding Id}"
-                                      HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <CheckBox.Style>
-                                    <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="ToolTip" Value="Only Gold Jewellery assets can be excluded from portfolio valuation." />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
-                                                <Setter Property="IsEnabled" Value="True" />
-                                                <Setter Property="ToolTip" Value="Exclude this gold jewellery asset from total portfolio valuation." />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </CheckBox.Style>
-                            </CheckBox>
+                            <Grid>
+                                <!-- CheckBox visible only for GoldJewellery -->
+                                <CheckBox x:Name="exclCheckBox" IsChecked="{Binding IsExcludedFromPortfolio, Mode=OneWay}"
+                                          Click="OnExclClick"
+                                          Tag="{Binding Id}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          ToolTip="Exclude this gold jewellery asset from total portfolio valuation.">
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                                
+                                <!-- Cross mark icon visible for other asset types -->
+                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               ToolTip="Only Gold Jewellery assets can be excluded from portfolio valuation.">
+                                    <ui:SymbolIcon.Style>
+                                        <Style TargetType="ui:SymbolIcon">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ui:SymbolIcon.Style>
+                                </ui:SymbolIcon>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
