@@ -1,4 +1,5 @@
 using Richie.Application.Assets;
+using Richie.Application.Audit;
 
 namespace Richie.Application.Dashboard;
 
@@ -20,7 +21,7 @@ public sealed record DashboardSummary(
     string HealthRating,
     bool HealthIsInterim,
     IReadOnlyList<UpcomingSipDto> UpcomingSips,
-    IReadOnlyList<string> Insights,
+    IReadOnlyList<Insight> Insights,
     IReadOnlyList<ActivityItem> RecentActivity);
 
 public interface IDashboardService

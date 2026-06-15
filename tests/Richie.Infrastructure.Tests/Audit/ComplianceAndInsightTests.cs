@@ -118,5 +118,19 @@ public sealed class ComplianceAndInsightTests : IDisposable
         Assert.Contains(insights, s => s.Contains("this month"));    // from expenses
     }
 
+    [Fact]
+    public void GenerateDetailed_TagsInsightsWithTheirSourceTopic()
+    {
+        AddAsset(AssetType.Equity, 1000m);   // 100% equity → portfolio/benchmark suggestions
+        _expenses.Create(new ExpenseInput(_clock.UtcNow, 500m, ExpenseCategory.DiningRestaurants, "Me", "Lunch", null));
+
+        IReadOnlyList<Insight> insights = _insights.GenerateDetailed();
+
+        Assert.Contains(insights, i => i.Topic == InsightTopic.Portfolio && i.Text.Contains("Equity"));
+        Assert.Contains(insights, i => i.Topic == InsightTopic.Spending && i.Text.Contains("this month"));
+        // The text-only overload stays consistent with the detailed one.
+        Assert.Equal(_insights.Generate(), insights.Select(i => i.Text).ToList());
+    }
+
     public void Dispose() => _db.Dispose();
 }

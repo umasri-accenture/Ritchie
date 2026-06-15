@@ -44,4 +44,16 @@ public partial class DashboardPage : Page
 
     private void OnGenerateReport(object sender, RoutedEventArgs e) =>
         (Window.GetWindow(this) as MainWindow)?.NavigateTo(typeof(ReportsPage));
+
+    // Deep-link an insight to the module that can act on it.
+    private void OnInsightAction(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is not DashboardViewModel.InsightRow row) return;
+        Type target = row.Topic switch
+        {
+            Richie.Application.Audit.InsightTopic.Spending => typeof(ExpenseTrackerPage),
+            _ => typeof(FinancialHealthAuditPage)
+        };
+        (Window.GetWindow(this) as MainWindow)?.NavigateTo(target);
+    }
 }

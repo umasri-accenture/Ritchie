@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Richie.Application.Assets;
+using Richie.Application.Common;
 using Richie.Application.Settings;
 using Richie.Domain.Notifications;
 using Richie.UI.Services;
@@ -78,6 +80,16 @@ public partial class SettingsViewModel : ObservableObject
             case "Light": ApplicationThemeManager.Apply(ApplicationTheme.Light); break;
             default: ApplicationThemeManager.ApplySystemTheme(); break;
         }
+
+        // ApplicationThemeManager.Apply resets the accent to the system accent, so re-brand afterwards.
+        ApplyBrandAccent();
+    }
+
+    /// <summary>Applies the Richie-Red brand accent across the app (buttons, nav highlight, focus rings).</summary>
+    public static void ApplyBrandAccent()
+    {
+        var accent = (Color)ColorConverter.ConvertFromString(BrandColors.Primary)!;
+        ApplicationAccentColorManager.Apply(accent, ApplicationThemeManager.GetAppTheme());
     }
 
     private static string Friendly(NotificationType type) => type switch

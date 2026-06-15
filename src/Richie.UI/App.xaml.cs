@@ -145,6 +145,9 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
+        // Brand the accent up-front so the splash + login screens are Richie-Red, not the system accent.
+        Richie.UI.ViewModels.SettingsViewModel.ApplyBrandAccent();
+
         DispatcherUnhandledException += (_, args) =>
         {
             Log.Fatal(args.Exception, "Unhandled UI exception");

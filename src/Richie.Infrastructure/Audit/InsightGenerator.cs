@@ -19,19 +19,23 @@ public sealed class InsightGenerator : IInsightGenerator
         _expenses = expenses;
     }
 
-    public IReadOnlyList<string> Generate(int max = 8)
+    public IReadOnlyList<string> Generate(int max = 8) =>
+        GenerateDetailed(max).Select(i => i.Text).ToList();
+
+    public IReadOnlyList<Insight> GenerateDetailed(int max = 8)
     {
-        var insights = new List<string>();
+        var insights = new List<Insight>();
 
         // Portfolio + coverage (already phrased as actionable conclusions by the audit).
-        insights.AddRange(_audit.GetReport().Suggestions);
+        insights.AddRange(_audit.GetReport().Suggestions.Select(s => new Insight(s, InsightTopic.Portfolio)));
 
         // Spending trends.
-        insights.AddRange(_expenses.GetDashboard().Insights);
+        insights.AddRange(_expenses.GetDashboard().Insights.Select(s => new Insight(s, InsightTopic.Spending)));
 
         return insights
-            .Where(s => !string.IsNullOrWhiteSpace(s))
-            .Distinct()
+            .Where(i => !string.IsNullOrWhiteSpace(i.Text))
+            .GroupBy(i => i.Text)
+            .Select(g => g.First())
             .Take(max)
             .ToList();
     }

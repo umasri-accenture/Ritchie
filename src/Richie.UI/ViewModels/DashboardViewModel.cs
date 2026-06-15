@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Richie.Application.Assets;
+using Richie.Application.Audit;
 using Richie.Application.Dashboard;
 using Richie.Application.Expenses;
 
@@ -18,6 +19,7 @@ public partial class DashboardViewModel : ObservableObject
 
     public sealed record UpcomingSipRow(string AssetName, string AmountText, string DueText, string FrequencyText);
     public sealed record ActivityRow(string DateText, string Module, string Action, string Description);
+    public sealed record InsightRow(string Text, string ActionLabel, InsightTopic Topic);
 
     [ObservableProperty] private string _totalAssetsText = "—";
     [ObservableProperty] private string _totalInvestedText = "—";
@@ -37,7 +39,7 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<UpcomingSipRow> _upcomingSips = [];
     [ObservableProperty] private bool _hasUpcomingSips;
     [ObservableProperty] private bool _noUpcomingSips;
-    [ObservableProperty] private ObservableCollection<string> _insights = [];
+    [ObservableProperty] private ObservableCollection<InsightRow> _insights = [];
     [ObservableProperty] private ObservableCollection<ActivityRow> _recentActivity = [];
     [ObservableProperty] private bool _hasActivity;
     [ObservableProperty] private bool _noActivity;
@@ -74,7 +76,8 @@ public partial class DashboardViewModel : ObservableObject
         HasUpcomingSips = UpcomingSips.Count > 0;
         NoUpcomingSips = !HasUpcomingSips;
 
-        Insights = new ObservableCollection<string>(s.Insights);
+        Insights = new ObservableCollection<InsightRow>(
+            s.Insights.Select(i => new InsightRow(i.Text, ActionLabel(i.Topic), i.Topic)));
 
         RecentActivity = new ObservableCollection<ActivityRow>(s.RecentActivity.Select(a =>
             new ActivityRow(a.TimestampUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture), a.Module, a.Action, a.Description)));
@@ -96,6 +99,12 @@ public partial class DashboardViewModel : ObservableObject
         MonthlySeries = [new ColumnSeries<double> { Values = months.Select(m => (double)m.Amount).ToArray(), Name = "Spend" }];
         MonthlyAxes = [new Axis { Labels = months.Select(m => m.Label).ToArray(), LabelsRotation = 30 }];
     }
+
+    private static string ActionLabel(InsightTopic topic) => topic switch
+    {
+        InsightTopic.Spending => "Analyse",
+        _ => "Review"
+    };
 
     private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
 }

@@ -9,6 +9,12 @@
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Brand semantic brushes (status triad). green = good, amber = attention, red = critical. -->
+            <SolidColorBrush x:Key="BrandSuccessBrush" Color="#1FA56C" />
+            <SolidColorBrush x:Key="BrandWarningBrush" Color="#DE9326" />
+            <SolidColorBrush x:Key="BrandDangerBrush" Color="#CE2E20" />
+            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#BE3A2F" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

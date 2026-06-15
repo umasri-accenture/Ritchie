@@ -54,7 +54,7 @@ public sealed class DashboardService : IDashboardService
             health.HealthRating,
             health.ScoresAreInterim,
             _sip.GetUpcomingSips(30),
-            _insights.Generate(),
+            _insights.GenerateDetailed(),
             ReadRecentActivity(userId));
     }
 
