@@ -1,8 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Richie.Application.Audit;
 using Richie.Domain.Audit;
+using Richie.UI.Charts;
 
 namespace Richie.UI.ViewModels;
 
@@ -24,6 +28,11 @@ public partial class HealthAuditViewModel : ObservableObject
     [ObservableProperty] private string _healthRating = string.Empty;
     [ObservableProperty] private Brush _healthBrush = Brushes.Gray;
     [ObservableProperty] private ObservableCollection<ScoreFactor> _healthFactors = [];
+
+    // Radar of the health-score factors (each 0–100), a visual complement to the factor list.
+    [ObservableProperty] private ISeries[] _healthRadarSeries = [];
+    [ObservableProperty] private PolarAxis[] _healthRadarAngleAxes = [];
+    [ObservableProperty] private PolarAxis[] _healthRadarRadiusAxes = [];
 
     [ObservableProperty] private int _riskScore;
     [ObservableProperty] private string _riskBand = string.Empty;
@@ -74,6 +83,7 @@ public partial class HealthAuditViewModel : ObservableObject
         HealthRating = r.HealthRating;
         HealthBrush = r.HealthScore >= 80 ? Green : r.HealthScore >= 60 ? Amber : Red;
         HealthFactors = new ObservableCollection<ScoreFactor>(r.HealthFactors);
+        BuildRadar(r.HealthFactors);
 
         RiskScore = r.RiskScore;
         RiskBand = r.RiskBand;
@@ -102,6 +112,26 @@ public partial class HealthAuditViewModel : ObservableObject
         Compliance = new ObservableCollection<ComplianceDisplay>(c.Areas.Select(ToComplianceDisplay));
         Gips = new ObservableCollection<GipStatusRow>(c.Gips);
         HasGips = c.Gips.Count > 0;
+    }
+
+    private void BuildRadar(IReadOnlyList<ScoreFactor> factors)
+    {
+        HealthRadarSeries =
+        [
+            new PolarLineSeries<double>
+            {
+                Values = factors.Select(f => (double)f.Points).ToArray(),
+                Name = "Your score",
+                IsClosed = true,
+                Fill = new SolidColorPaint(BrandPalette.Primary.WithAlpha(60)),
+                Stroke = new SolidColorPaint(BrandPalette.Primary) { StrokeThickness = 2 },
+                GeometryFill = new SolidColorPaint(BrandPalette.Primary),
+                GeometryStroke = new SolidColorPaint(BrandPalette.Primary),
+                GeometrySize = 8
+            }
+        ];
+        HealthRadarAngleAxes = [new PolarAxis { Labels = factors.Select(f => f.Name).ToArray() }];
+        HealthRadarRadiusAxes = [new PolarAxis { MinLimit = 0, MaxLimit = 100 }];
     }
 
     private ComplianceDisplay ToComplianceDisplay(ComplianceArea area)
