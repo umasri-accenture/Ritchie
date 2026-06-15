@@ -19,6 +19,17 @@ public static class BrandPalette
 
     public static SKColor At(int index) => Colors[index % Colors.Length];
 
+    /// <summary>The categorical colour at <paramref name="index"/> as a frozen WPF brush — for
+    /// custom chart legends that must match the on-chart slice colours exactly.</summary>
+    public static System.Windows.Media.Brush MediaBrush(int index)
+    {
+        SKColor c = At(index);
+        var brush = new System.Windows.Media.SolidColorBrush(
+            System.Windows.Media.Color.FromArgb(c.Alpha, c.Red, c.Green, c.Blue));
+        brush.Freeze();
+        return brush;
+    }
+
     /// <summary>A fresh paint for the categorical colour at <paramref name="index"/> (wraps around).</summary>
     public static SolidColorPaint Categorical(int index) => new(At(index));
 

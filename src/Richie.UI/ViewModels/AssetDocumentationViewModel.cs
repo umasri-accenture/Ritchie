@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
@@ -12,8 +13,11 @@ public partial class AssetDocumentationViewModel : ObservableObject
 {
     private readonly IAssetService _assets;
 
+    /// <summary>One allocation breakdown row with a colour swatch matching the donut slice.</summary>
+    public sealed record AllocationRow(Brush Swatch, string TypeName, string ValueText, string PercentText);
+
     [ObservableProperty] private ObservableCollection<AssetSummary> _items = [];
-    [ObservableProperty] private ObservableCollection<AllocationSlice> _allocation = [];
+    [ObservableProperty] private ObservableCollection<AllocationRow> _allocation = [];
     [ObservableProperty] private ISeries[] _allocationSeries = [];
     [ObservableProperty] private string _totalCurrentValueText = string.Empty;
     [ObservableProperty] private string _totalInvestedText = string.Empty;
@@ -34,13 +38,15 @@ public partial class AssetDocumentationViewModel : ObservableObject
         HasAssets = !IsEmpty;
 
         PortfolioSummary summary = _assets.GetPortfolioSummary();
-        Allocation = new ObservableCollection<AllocationSlice>(summary.Allocation);
+        Allocation = new ObservableCollection<AllocationRow>(summary.Allocation.Select((s, i) =>
+            new AllocationRow(BrandPalette.MediaBrush(i), s.TypeName, Money(s.Value),
+                string.Format(CultureInfo.CurrentCulture, "({0:0.0}%)", s.Percent))));
         AllocationSeries = summary.Allocation
             .Select((s, i) => (ISeries)new PieSeries<double>
             {
                 Values = [(double)s.Value],
                 Name = s.TypeName,
-                InnerRadius = 55,
+                InnerRadius = 45,
                 Fill = BrandPalette.Categorical(i)
             })
             .ToArray();

@@ -145,8 +145,10 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
-        // Brand the accent up-front so the splash + login screens are Richie-Red, not the system accent.
-        Richie.UI.ViewModels.SettingsViewModel.ApplyBrandAccent();
+        // Apply a known theme + the Richie-Red accent up-front. Applying the accent before any theme
+        // is set leaves WPF-UI Primary buttons (e.g. first-run "Set up Richie") rendering greyed/stuck,
+        // so establish the light theme first; the user's saved theme is re-applied after login.
+        Richie.UI.ViewModels.SettingsViewModel.ApplyTheme("Light");
 
         DispatcherUnhandledException += (_, args) =>
         {
@@ -172,19 +174,18 @@ public partial class App : System.Windows.Application
         {
             // Migrate before the host starts so the SIP background service sees a ready database.
             await Task.Run(() => _host.Services.GetRequiredService<IDatabaseInitializer>().Initialize());
+            await _host.StartAsync();
+            ShowAuth();
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Database initialization failed");
-            MessageBox.Show(ex.ToString(), "Richie — database error");
+            Log.Fatal(ex, "Startup failed");
+            MessageBox.Show(ex.ToString(), "Richie — startup error");
             splash.Close();
             Shutdown();
             return;
         }
 
-        await _host.StartAsync();
-
-        ShowAuth();
         splash.Close();
     }
 

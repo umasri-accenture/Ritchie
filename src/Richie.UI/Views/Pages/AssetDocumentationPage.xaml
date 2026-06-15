@@ -56,18 +56,25 @@
             <ui:Card Grid.Column="2">
                 <StackPanel>
                     <ui:TextBlock FontTypography="BodyStrong" Text="Allocation by asset type" Margin="0,0,0,8" />
-                    <lvc:PieChart Height="200"
+                    <lvc:PieChart Height="220"
                                   Series="{Binding AllocationSeries}"
-                                  LegendPosition="Right"
+                                  LegendPosition="Hidden"
                                   Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <ItemsControl ItemsSource="{Binding Allocation}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,2">
-                                    <ui:TextBlock Text="{Binding TypeName}" HorizontalAlignment="Left" />
-                                    <ui:TextBlock HorizontalAlignment="Right">
-                                        <Run Text="{Binding Value, Mode=OneWay, StringFormat='₹{0:N2}'}" />
-                                        <Run Text="{Binding Percent, Mode=OneWay, StringFormat=' ({0:0.0}%)'}" />
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Grid.Column="0" Width="10" Height="10" Fill="{Binding Swatch}"
+                                             VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <ui:TextBlock Grid.Column="1" Text="{Binding TypeName}" HorizontalAlignment="Left" />
+                                    <ui:TextBlock Grid.Column="2" HorizontalAlignment="Right">
+                                        <Run Text="{Binding ValueText, Mode=OneWay}" />
+                                        <Run Text="{Binding PercentText, Mode=OneWay}" />
                                     </ui:TextBlock>
                                 </Grid>
                             </DataTemplate>

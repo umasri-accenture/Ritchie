@@ -116,8 +116,27 @@
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong" Text="Asset allocation" />
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="By value" Margin="0,0,0,8" />
-                        <lvc:PieChart Height="220" Series="{Binding AllocationSeries}" LegendPosition="Right"
-                                      Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <Grid Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <lvc:PieChart Grid.Column="0" Height="220" Series="{Binding AllocationSeries}"
+                                          LegendPosition="Hidden" />
+                            <ItemsControl Grid.Column="1" ItemsSource="{Binding AllocationLegend}"
+                                          VerticalAlignment="Center" Margin="10,0,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <Ellipse Width="10" Height="10" Fill="{Binding Swatch}"
+                                                     VerticalAlignment="Center" Margin="0,0,6,0" />
+                                            <ui:TextBlock FontTypography="Caption" VerticalAlignment="Center"
+                                                          Text="{Binding Label}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
                         <ui:TextBlock Appearance="Secondary" Text="Add assets to see your allocation."
                                       Visibility="{Binding NoAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>

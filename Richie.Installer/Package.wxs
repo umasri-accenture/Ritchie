@@ -26,8 +26,10 @@
     <Icon Id="AppIcon" SourceFile="$(var.PublishDir)Richie.UI.exe" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
-    <!-- Simple progress-only wizard (no license page, no directory picker). -->
+    <!-- Minimal wizard: license-acceptance page, progress, finish (no directory picker). -->
     <ui:WixUI Id="WixUI_Minimal" />
+    <!-- Richie's own licence agreement (next to this .wxs), shown on the welcome/EULA page. -->
+    <WixVariable Id="WixUILicenseRtf" Value="$(sys.SOURCEFILEDIR)License.rtf" />
 
     <Feature Id="ProductFeature" Level="1">
       <ComponentGroupRef Id="AppFiles" />

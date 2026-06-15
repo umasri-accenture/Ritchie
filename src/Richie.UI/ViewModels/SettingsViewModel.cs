@@ -89,7 +89,12 @@ public partial class SettingsViewModel : ObservableObject
     public static void ApplyBrandAccent()
     {
         var accent = (Color)ColorConverter.ConvertFromString(BrandColors.Primary)!;
-        ApplicationAccentColorManager.Apply(accent, ApplicationThemeManager.GetAppTheme());
+        // Before a theme is applied (e.g. at startup) GetAppTheme() is Unknown — applying the accent
+        // against Unknown leaves accent-based controls (Primary buttons) rendering greyed/disabled.
+        ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
+        if (theme is ApplicationTheme.Unknown)
+            theme = ApplicationTheme.Light;
+        ApplicationAccentColorManager.Apply(accent, theme);
     }
 
     private static string Friendly(NotificationType type) => type switch

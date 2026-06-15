@@ -27,6 +27,7 @@ public partial class DashboardViewModel : ObservableObject
     public sealed record UpcomingSipRow(string AssetName, string AmountText, string DueText, string FrequencyText);
     public sealed record ActivityRow(string DateText, string Module, string Action, string Description);
     public sealed record InsightRow(string Text, string ActionLabel, InsightTopic Topic);
+    public sealed record AllocationLegendItem(string Label, Brush Swatch);
 
     [ObservableProperty] private string _totalAssetsText = "—";
     [ObservableProperty] private string _totalInvestedText = "—";
@@ -39,6 +40,7 @@ public partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private bool _healthIsInterim;
 
     [ObservableProperty] private ISeries[] _allocationSeries = [];
+    [ObservableProperty] private ObservableCollection<AllocationLegendItem> _allocationLegend = [];
     [ObservableProperty] private bool _hasAssets;
     [ObservableProperty] private bool _noAssets;
 
@@ -120,8 +122,12 @@ public partial class DashboardViewModel : ObservableObject
         NoAssets = !HasAssets;
         AllocationSeries = allocation
             .Select((a, i) => (ISeries)new PieSeries<double>
-                { Values = [(double)a.Value], Name = $"{a.TypeName} {a.Percent:0}%", InnerRadius = 55, Fill = BrandPalette.Categorical(i) })
+                { Values = [(double)a.Value], Name = a.TypeName, InnerRadius = 45, Fill = BrandPalette.Categorical(i) })
             .ToArray();
+        // Custom legend (matches slice colours) so it lays out inside the card instead of the
+        // built-in legend overflowing it.
+        AllocationLegend = new ObservableCollection<AllocationLegendItem>(
+            allocation.Select((a, i) => new AllocationLegendItem($"{a.TypeName}  {a.Percent:0.#}%", BrandPalette.MediaBrush(i))));
 
         // Income vs Expense — filled area trend over the last 9 months.
         IReadOnlyList<PeriodDatum> income = _income.GetMonthlyTotals(9);
