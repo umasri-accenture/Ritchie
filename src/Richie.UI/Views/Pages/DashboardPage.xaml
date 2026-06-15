@@ -8,66 +8,103 @@
       mc:Ignorable="d"
       Title="Dashboard"
       ScrollViewer.CanContentScroll="False"
-      Loaded="OnLoaded">
+      Loaded="OnLoaded"
+      Unloaded="OnUnloaded">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
         <StackPanel>
-            <ui:TextBlock FontTypography="TitleLarge" Text="Dashboard" Margin="0,0,0,12" />
+            <!-- Hero greeting: date · greeting · portfolio insight · mini-calendar · live clock -->
+            <ui:Card Margin="0,0,0,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="{Binding HeroDateText}" />
+                        <ui:TextBlock FontTypography="TitleLarge" Margin="0,2,0,0" Text="{Binding GreetingText}" />
+                        <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,6,12,0"
+                                      Text="{Binding PortfolioInsightText}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <ui:TextBlock x:Name="ClockText" FontTypography="TitleLarge" HorizontalAlignment="Right" />
+                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption"
+                                      HorizontalAlignment="Right" Text="Local time" />
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
 
             <!-- Summary cards -->
             <UniformGrid Rows="1" Margin="0,0,0,12">
                 <ui:Card Margin="0,0,8,0">
-                    <StackPanel>
-                        <ui:TextBlock Appearance="Secondary" Text="Total assets" />
-                        <ui:TextBlock FontTypography="Title" Text="{Binding TotalAssetsText}" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Wallet24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
+                                       Foreground="{StaticResource BrandPrimaryBrush}" />
+                        <StackPanel>
+                            <ui:TextBlock Appearance="Secondary" Text="Total assets" />
+                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis" Text="{Binding TotalAssetsText}" />
+                        </StackPanel>
                     </StackPanel>
                 </ui:Card>
                 <ui:Card Margin="0,0,8,0">
-                    <StackPanel>
-                        <ui:TextBlock Appearance="Secondary" Text="Total invested" />
-                        <ui:TextBlock FontTypography="Title" Text="{Binding TotalInvestedText}" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Savings24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
+                                       Foreground="{StaticResource BrandPrimaryBrush}" />
+                        <StackPanel>
+                            <ui:TextBlock Appearance="Secondary" Text="Total invested" />
+                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis" Text="{Binding TotalInvestedText}" />
+                        </StackPanel>
                     </StackPanel>
                 </ui:Card>
                 <ui:Card Margin="0,0,8,0">
-                    <StackPanel>
-                        <ui:TextBlock Appearance="Secondary" Text="Expenses (this month)" />
-                        <ui:TextBlock FontTypography="Title" Text="{Binding TotalExpensesText}" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ReceiptMoney24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
+                                       Foreground="{StaticResource BrandPrimaryBrush}" />
+                        <StackPanel>
+                            <ui:TextBlock Appearance="Secondary" Text="Expenses (this month)" />
+                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis" Text="{Binding TotalExpensesText}" />
+                        </StackPanel>
                     </StackPanel>
                 </ui:Card>
                 <ui:Card Margin="0,0,8,0">
-                    <StackPanel>
-                        <ui:TextBlock Appearance="Secondary" Text="Profit &amp; loss" />
-                        <ui:TextBlock FontTypography="Title" Foreground="{Binding ProfitLossBrush}" Text="{Binding ProfitLossText}" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="DataTrending24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
+                                       Foreground="{Binding ProfitLossBrush}" />
+                        <StackPanel>
+                            <ui:TextBlock Appearance="Secondary" Text="Profit &amp; loss" />
+                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis"
+                                          Foreground="{Binding ProfitLossBrush}" Text="{Binding ProfitLossText}" />
+                        </StackPanel>
                     </StackPanel>
                 </ui:Card>
                 <ui:Card>
-                    <StackPanel>
-                        <ui:TextBlock Appearance="Secondary" Text="Financial health" />
-                        <StackPanel Orientation="Horizontal">
-                            <ui:TextBlock FontTypography="Title" Foreground="{Binding HealthBrush}" Text="{Binding HealthScore}" />
-                            <ui:TextBlock Appearance="Secondary" VerticalAlignment="Bottom" Margin="3,0,0,3" Text="/100" />
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="HeartPulse24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
+                                       Foreground="{Binding HealthBrush}" />
+                        <StackPanel>
+                            <ui:TextBlock Appearance="Secondary" Text="Financial health" />
+                            <StackPanel Orientation="Horizontal">
+                                <ui:TextBlock FontTypography="Title" Foreground="{Binding HealthBrush}" Text="{Binding HealthScore}" />
+                                <ui:TextBlock Appearance="Secondary" VerticalAlignment="Bottom" Margin="3,0,0,3" Text="/100" />
+                            </StackPanel>
+                            <ui:TextBlock Foreground="{Binding HealthBrush}" Text="{Binding HealthRating}" />
                         </StackPanel>
-                        <ui:TextBlock Foreground="{Binding HealthBrush}" Text="{Binding HealthRating}" />
-                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Text="{Binding HealthScaleLegend}" />
-                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Foreground="#9D5D00" Margin="0,2,0,0"
-                                      Text="Interim — pending finalization"
-                                      Visibility="{Binding HealthIsInterim, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
                 </ui:Card>
             </UniformGrid>
 
             <!-- Quick actions -->
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                <ui:Button Content="Add asset" Appearance="Primary" Margin="0,0,8,0" Click="OnAddAsset" />
-                <ui:Button Content="Add expense" Margin="0,0,8,0" Click="OnAddExpense" />
-                <ui:Button Content="Add password" Margin="0,0,8,0" Click="OnAddPassword" />
-                <ui:Button Content="Generate report" Click="OnGenerateReport" />
-            </StackPanel>
+            <WrapPanel Margin="0,0,0,12">
+                <ui:Button Content="Add asset" Appearance="Primary" Margin="0,0,8,8" Click="OnAddAsset" />
+                <ui:Button Content="Add expense" Margin="0,0,8,8" Click="OnAddExpense" />
+                <ui:Button Content="Add password" Margin="0,0,8,8" Click="OnAddPassword" />
+                <ui:Button Content="Generate report" Margin="0,0,0,8" Click="OnGenerateReport" />
+            </WrapPanel>
 
-            <!-- Charts -->
+            <!-- Charts row 1: Asset allocation + Income vs Expense -->
             <Grid Margin="0,0,0,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -75,23 +112,28 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ui:Card Grid.Column="0" Height="280">
+                <ui:Card Grid.Column="0" Height="300">
                     <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Asset allocation" Margin="0,0,0,8" />
-                        <lvc:PieChart Height="210" Series="{Binding AllocationSeries}" LegendPosition="Right"
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Asset allocation" />
+                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="By value" Margin="0,0,0,8" />
+                        <lvc:PieChart Height="220" Series="{Binding AllocationSeries}" LegendPosition="Right"
                                       Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <ui:TextBlock Appearance="Secondary" Text="Add assets to see your allocation."
+                                      Visibility="{Binding NoAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
                 </ui:Card>
 
-                <ui:Card Grid.Column="2" Height="280">
+                <ui:Card Grid.Column="2" Height="300">
                     <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Monthly expense trend (last 6 months)" Margin="0,0,0,8" />
-                        <lvc:CartesianChart Height="210" Series="{Binding MonthlySeries}" XAxes="{Binding MonthlyAxes}" />
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Income vs Expense" />
+                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="Last 9 months" Margin="0,0,0,8" />
+                        <lvc:CartesianChart Height="220" Series="{Binding IncomeExpenseSeries}"
+                                            XAxes="{Binding IncomeExpenseAxes}" LegendPosition="Bottom" />
                     </StackPanel>
                 </ui:Card>
             </Grid>
 
-            <!-- Upcoming SIPs + Insights -->
+            <!-- Charts row 2: Investment growth + Expense breakdown -->
             <Grid Margin="0,0,0,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -99,9 +141,73 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ui:Card Grid.Column="0">
+                <ui:Card Grid.Column="0" Height="300">
                     <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Upcoming SIPs (next 30 days)" Margin="0,0,0,6" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <ui:TextBlock FontTypography="BodyStrong" Text="Investment growth" />
+                                <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="Invested capital over time" />
+                            </StackPanel>
+                            <ui:TextBlock Grid.Column="1" VerticalAlignment="Center" FontTypography="BodyStrong"
+                                          Foreground="{StaticResource BrandSuccessBrush}" Text="{Binding InvestmentGrowthText}"
+                                          Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </Grid>
+                        <lvc:CartesianChart Height="210" Margin="0,8,0,0" Series="{Binding InvestmentSeries}"
+                                            XAxes="{Binding InvestmentAxes}"
+                                            Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0" Text="Add assets to track investment growth."
+                                      Visibility="{Binding NoAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Grid.Column="2" Height="300">
+                    <StackPanel>
+                        <ui:TextBlock FontTypography="BodyStrong" Text="Expense breakdown" />
+                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="This month" Margin="0,0,0,8" />
+                        <lvc:CartesianChart Height="220" Series="{Binding ExpenseBreakdownSeries}"
+                                            XAxes="{Binding ExpenseBreakdownAxes}" />
+                    </StackPanel>
+                </ui:Card>
+            </Grid>
+
+            <!-- Insights (horizontal) -->
+            <ui:Card Margin="0,0,0,12">
+                <StackPanel>
+                    <ui:TextBlock FontTypography="BodyStrong" Text="Insights" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding Insights}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="1" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,8,0" Padding="12" CornerRadius="8"
+                                        Background="{DynamicResource ControlFillColorDefaultBrush}">
+                                    <DockPanel>
+                                        <ui:Button DockPanel.Dock="Bottom" HorizontalAlignment="Left" Margin="0,8,0,0"
+                                                   Padding="10,2" Appearance="Secondary"
+                                                   Content="{Binding ActionLabel}" Click="OnInsightAction" />
+                                        <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Text="{Binding Text}" />
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ui:TextBlock Appearance="Secondary"
+                                  Text="No insights yet — add assets and expenses to see conclusions here."
+                                  Visibility="{Binding NoInsights, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Upcoming SIPs -->
+            <ui:Card Margin="0,0,0,12">
+                <StackPanel>
+                    <ui:TextBlock FontTypography="BodyStrong" Text="Upcoming SIPs (next 30 days)" Margin="0,0,0,6" />
                         <ItemsControl ItemsSource="{Binding UpcomingSips}"
                                       Visibility="{Binding HasUpcomingSips, Converter={StaticResource BoolToVisibilityConverter}}">
                             <ItemsControl.ItemTemplate>
@@ -130,31 +236,6 @@
                     </StackPanel>
                 </ui:Card>
 
-                <ui:Card Grid.Column="2">
-                    <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Insights" Margin="0,0,0,6" />
-                        <ItemsControl ItemsSource="{Binding Insights}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,3">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <ui:TextBlock Grid.Column="0" Appearance="Secondary" TextWrapping="Wrap"
-                                                      VerticalAlignment="Center" Text="{Binding Text}" />
-                                        <ui:Button Grid.Column="1" Margin="8,0,0,0" Padding="10,2"
-                                                   VerticalAlignment="Center"
-                                                   Appearance="Secondary" Content="{Binding ActionLabel}"
-                                                   Click="OnInsightAction" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </ui:Card>
-            </Grid>
-
             <!-- Recent activity -->
             <ui:Card>
                 <StackPanel>
@@ -164,17 +245,35 @@
                         <ItemsControl ItemsSource="{Binding RecentActivity}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="0,3">
+                                    <Grid Margin="0,4">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="130" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="140" />
                                             <ColumnDefinition Width="120" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <ui:TextBlock Grid.Column="0" Appearance="Secondary" FontTypography="Caption" Text="{Binding DateText}" />
-                                        <ui:TextBlock Grid.Column="1" FontTypography="Caption"
+                                        <!-- Action marker: green=Added, amber=Updated, red=Deleted -->
+                                        <Ellipse Grid.Column="0" Width="8" Height="8" Margin="0,0,10,0" VerticalAlignment="Center">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="{StaticResource BrandWarningBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Action}" Value="Added">
+                                                            <Setter Property="Fill" Value="{StaticResource BrandSuccessBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Action}" Value="Deleted">
+                                                            <Setter Property="Fill" Value="{StaticResource BrandDangerBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                        <ui:TextBlock Grid.Column="1" Appearance="Secondary" FontTypography="Caption"
+                                                      VerticalAlignment="Center" Text="{Binding DateText}" />
+                                        <ui:TextBlock Grid.Column="2" FontTypography="Caption" VerticalAlignment="Center"
                                                       Text="{Binding Module}" />
-                                        <ui:TextBlock Grid.Column="2" Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
-                                                      Text="{Binding Description}" />
+                                        <ui:TextBlock Grid.Column="3" Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
+                                                      VerticalAlignment="Center" Text="{Binding Description}" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

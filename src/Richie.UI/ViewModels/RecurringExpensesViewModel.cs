@@ -34,7 +34,7 @@ public partial class RecurringExpensesViewModel : ObservableObject
 
     private static RecurringCard ToCard(RecurringSummary r)
     {
-        string header = $"{r.CategoryName} — {r.Amount.ToString("N2", CultureInfo.CurrentCulture)}";
+        string header = $"{r.CategoryName} — {Richie.Application.Common.CurrencyFormatter.Format(r.Amount)}";
         string status = r.IsEnabled ? $"next {r.NextRunDateUtc:d}" : "paused";
         string detail = $"{r.Frequency}, {status}";
         return new RecurringCard(r.Id, header, detail);

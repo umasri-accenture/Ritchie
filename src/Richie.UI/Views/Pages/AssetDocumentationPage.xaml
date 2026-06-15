@@ -21,8 +21,13 @@
 
         <!-- Header -->
         <Grid Grid.Row="0" Margin="0,0,0,16">
-            <ui:TextBlock FontTypography="TitleLarge" Text="Asset Documentation" VerticalAlignment="Center" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Asset Documentation"
+                          VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button Content="Goals" Margin="0,0,8,0" Click="OnOpenGoals" />
                 <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
                 <ui:Button Content="Add asset" Appearance="Primary" Click="OnAddAsset" />
@@ -61,7 +66,7 @@
                                 <Grid Margin="0,2">
                                     <ui:TextBlock Text="{Binding TypeName}" HorizontalAlignment="Left" />
                                     <ui:TextBlock HorizontalAlignment="Right">
-                                        <Run Text="{Binding Value, Mode=OneWay, StringFormat=N2}" />
+                                        <Run Text="{Binding Value, Mode=OneWay, StringFormat='₹{0:N2}'}" />
                                         <Run Text="{Binding Percent, Mode=OneWay, StringFormat=' ({0:0.0}%)'}" />
                                     </ui:TextBlock>
                                 </Grid>
@@ -82,9 +87,9 @@
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
                 <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" />
                 <DataGridTextColumn Header="Identifier" Binding="{Binding Identifier}" Width="Auto" />
-                <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat=N2}" Width="Auto" />
-                <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat=N2}" Width="Auto" />
-                <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLoss, StringFormat=N2}" Width="Auto">
+                <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat='₹{0:N2}'}" Width="Auto" />
+                <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat='₹{0:N2}'}" Width="Auto" />
+                <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLoss, StringFormat='₹{0:N2}'}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="{Binding ProfitLoss, Converter={StaticResource PnlBrush}}" />

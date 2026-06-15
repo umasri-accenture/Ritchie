@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Richie.Application.Profile;
@@ -8,6 +9,8 @@ public partial class ProfileViewModel : ObservableObject
 {
     private readonly IProfileService _profile;
 
+    public sealed record AchievementRow(string Icon, string Name, string Description, bool Unlocked, double Opacity);
+
     [ObservableProperty] private string _fullName = string.Empty;
     [ObservableProperty] private string _username = string.Empty;
     [ObservableProperty] private string _ageText = string.Empty;
@@ -16,6 +19,8 @@ public partial class ProfileViewModel : ObservableObject
     [ObservableProperty] private string _securityScoreNote = string.Empty;
     [ObservableProperty] private string _storageText = string.Empty;
     [ObservableProperty] private string? _error;
+    [ObservableProperty] private ObservableCollection<AchievementRow> _achievements = [];
+    [ObservableProperty] private string _achievementsSummary = string.Empty;
 
     public ProfileViewModel(IProfileService profile) => _profile = profile;
 
@@ -29,6 +34,11 @@ public partial class ProfileViewModel : ObservableObject
         SecurityScore = data.SecurityScore;
         SecurityScoreNote = data.SecurityScoreNote;
         StorageText = FormatBytes(data.StorageBytes);
+
+        IReadOnlyList<Achievement> earned = _profile.GetAchievements();
+        Achievements = new ObservableCollection<AchievementRow>(earned.Select(a =>
+            new AchievementRow(a.Icon, a.Name, a.Description, a.Unlocked, a.Unlocked ? 1.0 : 0.35)));
+        AchievementsSummary = $"{earned.Count(a => a.Unlocked)} / {earned.Count} unlocked";
     }
 
     public bool Save()

@@ -14,6 +14,7 @@ public static class BrandPalette
     public static readonly SKColor[] Colors = BrandColors.Categorical.Select(SKColor.Parse).ToArray();
     public static readonly SKColor Primary = SKColor.Parse(BrandColors.Primary);
     public static readonly SKColor Success = SKColor.Parse(BrandColors.Success);
+    public static readonly SKColor Warning = SKColor.Parse(BrandColors.Warning);
     public static readonly SKColor Danger = SKColor.Parse(BrandColors.Danger);
 
     public static SKColor At(int index) => Colors[index % Colors.Length];

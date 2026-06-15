@@ -47,7 +47,7 @@ public sealed class DashboardServiceTests : IDisposable
         var audit = new HealthAuditService(_assets, goals, insurance,
             new PlaceholderScoringEngine(), new AgeBandBenchmarkProvider(), _session, _db);
         var insights = new InsightGenerator(audit, _expenses);
-        _sut = new DashboardService(_assets, _expenses, audit, _sip, insights, _session, _db);
+        _sut = new DashboardService(_assets, _expenses, audit, _sip, insights, _session, _db, _clock);
     }
 
     [Fact]

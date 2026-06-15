@@ -24,9 +24,14 @@
         <ui:TitleBar Grid.Row="0" Title="Insurance &amp; Protection" />
 
         <Grid Grid.Row="1" Margin="24,8,24,12">
-            <ui:TextBlock FontTypography="BodyStrong" VerticalAlignment="Center"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBlock Grid.Column="0" FontTypography="BodyStrong" VerticalAlignment="Center"
+                          TextTrimming="CharacterEllipsis" Margin="0,0,8,0"
                           Text="Your policies (not part of asset allocation)" />
-            <ui:Button HorizontalAlignment="Right" Content="Add policy" Appearance="Primary" Click="OnAddPolicy" />
+            <ui:Button Grid.Column="1" HorizontalAlignment="Right" Content="Add policy" Appearance="Primary" Click="OnAddPolicy" />
         </Grid>
 
         <DataGrid Grid.Row="2" Margin="24,0,24,16" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
@@ -36,8 +41,8 @@
                 <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" />
                 <DataGridTextColumn Header="Policy" Binding="{Binding PolicyName}" Width="*" />
                 <DataGridTextColumn Header="Provider" Binding="{Binding Provider}" Width="*" />
-                <DataGridTextColumn Header="Coverage" Binding="{Binding CoverageAmount, StringFormat=N0}" Width="Auto" />
-                <DataGridTextColumn Header="Premium/yr" Binding="{Binding AnnualPremium, StringFormat=N0}" Width="Auto" />
+                <DataGridTextColumn Header="Coverage" Binding="{Binding CoverageAmount, StringFormat='₹{0:N0}'}" Width="Auto" />
+                <DataGridTextColumn Header="Premium/yr" Binding="{Binding AnnualPremium, StringFormat='₹{0:N0}'}" Width="Auto" />
                 <DataGridTextColumn Header="Renewal" Binding="{Binding RenewalDate, StringFormat=d}" Width="Auto" />
                 <DataGridTextColumn Header="Days left" Binding="{Binding DaysToRenewal}" Width="Auto" />
                 <DataGridTemplateColumn Header="Actions" Width="Auto">

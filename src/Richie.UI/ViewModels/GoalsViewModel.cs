@@ -53,5 +53,5 @@ public partial class GoalsViewModel : ObservableObject
             projected);
     }
 
-    private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+    private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 }

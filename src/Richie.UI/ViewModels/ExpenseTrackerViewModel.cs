@@ -129,5 +129,5 @@ public partial class ExpenseTrackerViewModel : ObservableObject
     private static decimal? ParseNullable(string text) =>
         decimal.TryParse(text, NumberStyles.Number, CultureInfo.CurrentCulture, out decimal v) ? v : null;
 
-    private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+    private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 }

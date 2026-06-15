@@ -8,21 +8,24 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="Richie"
-        Height="760" Width="1180"
+        WindowState="Maximized"
+        Width="1180" Height="720"
+        MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
         WindowCornerPreference="Round">
-    <Grid>
+    <Grid Background="{StaticResource BrandBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <ui:TitleBar Grid.Row="0" Title="Richie">
             <ui:TitleBar.Icon>
-                <ui:SymbolIcon Symbol="Wallet24" />
+                <ui:ImageIcon Source="pack://application:,,,/Assets/richie-logo.png" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
@@ -114,6 +117,8 @@
         <!-- Sidebar + content -->
         <ui:NavigationView x:Name="RootNavigation" Grid.Row="2"
                            PaneDisplayMode="Left"
+                           OpenPaneLength="220"
+                           Background="Transparent"
                            IsBackButtonVisible="Collapsed">
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Dashboard" TargetPageType="{x:Type pages:DashboardPage}">
@@ -140,8 +145,36 @@
             </ui:NavigationView.MenuItems>
         </ui:NavigationView>
 
+        <!-- Draggable grip to resize the sidebar; sits on the pane's right edge (positioned in code-behind). -->
+        <Thumb x:Name="PaneResizeGrip" Grid.Row="2" Width="6" Panel.ZIndex="50"
+               HorizontalAlignment="Left" VerticalAlignment="Stretch"
+               Cursor="SizeWE" DragDelta="OnPaneResize"
+               ToolTip="Drag to resize the sidebar">
+            <Thumb.Template>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Thumb.Template>
+        </Thumb>
+
+        <!-- Status bar: encryption · storage · last backup · auto-lock -->
+        <Border Grid.Row="3" BorderThickness="0,1,0,0" Padding="12,4"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+            <StackPanel Orientation="Horizontal">
+                <ui:SymbolIcon Symbol="LockClosed24" FontSize="14" VerticalAlignment="Center" />
+                <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Margin="4,0,16,0"
+                              VerticalAlignment="Center" Text="AES-256 encrypted" />
+                <ui:TextBlock x:Name="StatusStorage" Appearance="Secondary" FontTypography="Caption"
+                              Margin="0,0,16,0" VerticalAlignment="Center" />
+                <ui:TextBlock x:Name="StatusBackup" Appearance="Secondary" FontTypography="Caption"
+                              Margin="0,0,16,0" VerticalAlignment="Center" />
+                <ui:TextBlock x:Name="StatusLock" Appearance="Secondary" FontTypography="Caption"
+                              VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
         <!-- App tour overlay -->
-        <Border x:Name="TourOverlay" Grid.RowSpan="3" Panel.ZIndex="100"
+        <Border x:Name="TourOverlay" Grid.RowSpan="4" Panel.ZIndex="100"
                 Background="#99000000" Visibility="Collapsed">
             <ui:Card Width="440" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel>
@@ -156,6 +189,6 @@
         </Border>
 
         <!-- Toast host (overlays all rows) -->
-        <ui:SnackbarPresenter x:Name="RootSnackbar" Grid.RowSpan="3" Panel.ZIndex="200" />
+        <ui:SnackbarPresenter x:Name="RootSnackbar" Grid.RowSpan="4" Panel.ZIndex="200" />
     </Grid>
 </ui:FluentWindow>

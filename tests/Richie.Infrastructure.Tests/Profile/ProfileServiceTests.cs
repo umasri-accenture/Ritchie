@@ -1,6 +1,9 @@
+using Richie.Application.Assets;
 using Richie.Application.Authentication;
 using Richie.Application.Profile;
+using Richie.Domain.Assets;
 using Richie.Domain.Authentication;
+using Richie.Infrastructure.Assets;
 using Richie.Infrastructure.Authentication;
 using Richie.Infrastructure.Profile;
 using Richie.Infrastructure.Security;
@@ -58,6 +61,33 @@ public sealed class ProfileServiceTests : IDisposable
         Assert.Equal("Mumbai", data.City);
 
         Assert.False(_sut.Update(new ProfileUpdate("X", 0, "Y")));   // invalid age
+    }
+
+    [Fact]
+    public void GetAchievements_NoData_AllLocked()
+    {
+        IReadOnlyList<Achievement> achievements = _sut.GetAchievements();
+
+        Assert.Equal(6, achievements.Count);
+        Assert.All(achievements, a => Assert.False(a.Unlocked));
+    }
+
+    [Fact]
+    public void GetAchievements_UnlocksFirstAsset_AfterAddingAnAsset()
+    {
+        var assets = new AssetService(_db, new ValuationService(), _session, _clock);
+        assets.Create(new AssetInput
+        {
+            Type = AssetType.GoldJewellery,
+            Name = "Necklace",
+            InvestmentStartDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            InvestedAmount = 1000,
+            CurrentValue = 1000,
+            InvestmentMode = InvestmentMode.LumpSum,
+        });
+
+        Achievement firstAsset = _sut.GetAchievements().Single(a => a.Name == "First Asset");
+        Assert.True(firstAsset.Unlocked);
     }
 
     public void Dispose() => _db.Dispose();

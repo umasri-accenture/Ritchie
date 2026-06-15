@@ -60,7 +60,7 @@ public partial class SipScheduleViewModel : ObservableObject
             _sip.GetUpcomingInstallments(_assetId, 5).Select(d => d.ToString("D", CultureInfo.CurrentCulture)));
         History = new ObservableCollection<string>(
             _sip.GetHistory(_assetId).Select(c =>
-                $"{c.DateUtc.ToString("d", CultureInfo.CurrentCulture)} — {c.Amount.ToString("N2", CultureInfo.CurrentCulture)}"));
+                $"{c.DateUtc.ToString("d", CultureInfo.CurrentCulture)} — {Richie.Application.Common.CurrencyFormatter.Format(c.Amount)}"));
     }
 
     [RelayCommand]

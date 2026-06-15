@@ -27,8 +27,13 @@
             <StackPanel>
                 <!-- Category distribution -->
                 <Grid Margin="0,0,0,8">
-                    <ui:TextBlock FontTypography="BodyStrong" Text="Category distribution" VerticalAlignment="Center" />
-                    <ComboBox HorizontalAlignment="Right" Width="160" ItemsSource="{Binding Periods}"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBlock Grid.Column="0" FontTypography="BodyStrong" Text="Category distribution"
+                                  VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+                    <ComboBox Grid.Column="1" HorizontalAlignment="Right" Width="160" ItemsSource="{Binding Periods}"
                               DisplayMemberPath="Text" SelectedValuePath="Value" SelectedValue="{Binding SelectedPeriod}" />
                 </Grid>
                 <ui:Card Margin="0,0,0,16">

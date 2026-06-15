@@ -44,10 +44,41 @@
                     </StackPanel>
                 </ui:Card>
 
-                <ui:Card>
+                <ui:Card Margin="0,0,0,12">
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong" Text="Storage used" />
                         <ui:TextBlock Appearance="Secondary" Text="{Binding StorageText}" />
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card>
+                    <StackPanel>
+                        <Grid Margin="0,0,0,8">
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Achievements" VerticalAlignment="Center" />
+                            <ui:TextBlock Appearance="Secondary" HorizontalAlignment="Right"
+                                          Text="{Binding AchievementsSummary}" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Achievements}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Width="150" Margin="0,0,8,8" Padding="10" CornerRadius="8"
+                                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                            Opacity="{Binding Opacity}">
+                                        <StackPanel>
+                                            <ui:TextBlock FontTypography="Title" Text="{Binding Icon}" />
+                                            <ui:TextBlock FontTypography="BodyStrong" TextWrapping="Wrap" Text="{Binding Name}" />
+                                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
+                                                          Text="{Binding Description}" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </ui:Card>
             </StackPanel>

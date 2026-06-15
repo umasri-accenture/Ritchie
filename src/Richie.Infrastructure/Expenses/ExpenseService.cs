@@ -206,5 +206,5 @@ public sealed class ExpenseService : IExpenseService
 
     private static string? Trim(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+    private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 }

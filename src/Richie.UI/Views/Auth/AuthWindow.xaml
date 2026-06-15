@@ -11,14 +11,14 @@
         ExtendsContentIntoTitleBar="True"
         WindowBackdropType="Mica"
         WindowCornerPreference="Round">
-    <Grid>
+    <Grid Background="{StaticResource BrandBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ui:TitleBar Grid.Row="0" Title="Richie">
             <ui:TitleBar.Icon>
-                <ui:SymbolIcon Symbol="Wallet24" />
+                <ui:ImageIcon Source="pack://application:,,,/Assets/richie-logo.png" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
         <Frame x:Name="RootFrame" Grid.Row="1" NavigationUIVisibility="Hidden" />

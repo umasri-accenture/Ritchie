@@ -15,6 +15,12 @@
             <SolidColorBrush x:Key="BrandWarningBrush" Color="#DE9326" />
             <SolidColorBrush x:Key="BrandDangerBrush" Color="#CE2E20" />
             <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#BE3A2F" />
+
+            <!-- Soft-gold app background (gentle vertical gradient; white cards sit on top). -->
+            <LinearGradientBrush x:Key="BrandBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#F7EDD4" Offset="0" />
+                <GradientStop Color="#E6CF97" Offset="1" />
+            </LinearGradientBrush>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

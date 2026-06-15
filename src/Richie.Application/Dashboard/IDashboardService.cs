@@ -1,5 +1,6 @@
 using Richie.Application.Assets;
 using Richie.Application.Audit;
+using Richie.Application.Expenses;
 
 namespace Richie.Application.Dashboard;
 
@@ -22,7 +23,9 @@ public sealed record DashboardSummary(
     bool HealthIsInterim,
     IReadOnlyList<UpcomingSipDto> UpcomingSips,
     IReadOnlyList<Insight> Insights,
-    IReadOnlyList<ActivityItem> RecentActivity);
+    IReadOnlyList<ActivityItem> RecentActivity,
+    IReadOnlyList<PeriodDatum> InvestedHistory,
+    decimal InvestedGrowthPercent);
 
 public interface IDashboardService
 {

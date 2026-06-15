@@ -18,8 +18,13 @@
 
         <!-- Header -->
         <Grid Grid.Row="0" Margin="0,0,0,16">
-            <ui:TextBlock FontTypography="TitleLarge" Text="Expense Tracker" VerticalAlignment="Center" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Expense Tracker"
+                          VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button Content="Analytics" Margin="0,0,8,0" Click="OnAnalytics" />
                 <ui:Button Content="Recurring" Margin="0,0,8,0" Click="OnRecurring" />
                 <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
@@ -104,7 +109,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="Auto" />
                 <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=N2}" Width="Auto" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='₹{0:N2}'}" Width="Auto" />
                 <DataGridTextColumn Header="Spent by" Binding="{Binding SpentBy}" Width="Auto" />
                 <DataGridTextColumn Header="Spent for" Binding="{Binding SpentFor}" Width="*" />
                 <DataGridCheckBoxColumn Header="Recurring" Binding="{Binding IsRecurring}" Width="Auto" />

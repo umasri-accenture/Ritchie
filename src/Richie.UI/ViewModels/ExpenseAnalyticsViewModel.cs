@@ -107,7 +107,7 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
             Category = r.Category,
             Name = r.CategoryName,
             LimitText = r.MonthlyLimit > 0 ? r.MonthlyLimit.ToString("0.##", CultureInfo.CurrentCulture) : string.Empty,
-            ActualText = r.ActualThisMonth.ToString("N2", CultureInfo.CurrentCulture),
+            ActualText = Richie.Application.Common.CurrencyFormatter.Format(r.ActualThisMonth),
             StatusText = StatusText(r),
             StatusBrush = StatusBrush(r.Status)
         }));

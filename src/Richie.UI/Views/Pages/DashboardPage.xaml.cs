@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Richie.UI.ViewModels;
 using Richie.UI.Views.Assets;
@@ -9,16 +11,30 @@ namespace Richie.UI.Views.Pages;
 
 public partial class DashboardPage : Page
 {
+    private readonly DispatcherTimer _clock;
+
     public DashboardPage()
     {
         InitializeComponent();
         DataContext = ((App)System.Windows.Application.Current).Services
             .GetRequiredService<DashboardViewModel>();
+
+        _clock = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _clock.Tick += (_, _) => TickClock();
     }
 
     private DashboardViewModel Vm => (DashboardViewModel)DataContext;
 
-    private void OnLoaded(object sender, RoutedEventArgs e) => Vm.Load();
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Vm.Load();
+        TickClock();
+        _clock.Start();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e) => _clock.Stop();
+
+    private void TickClock() => ClockText.Text = DateTime.Now.ToString("h:mm tt", CultureInfo.CurrentCulture);
 
     private void OnAddAsset(object sender, RoutedEventArgs e)
     {

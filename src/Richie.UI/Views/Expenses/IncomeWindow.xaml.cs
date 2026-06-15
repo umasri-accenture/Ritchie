@@ -18,6 +18,18 @@ public partial class IncomeWindow : FluentWindow
 
     private void OnAddIncome(object sender, RoutedEventArgs e) => OpenEditor(null);
 
+    private void OnBulkUpload(object sender, RoutedEventArgs e)
+    {
+        var services = ((App)System.Windows.Application.Current).Services;
+        var window = services.GetRequiredService<Richie.UI.Views.Assets.BulkUploadWindow>();
+        window.Owner = this;
+        window.Upload.Initialize(
+            services.GetRequiredService<Richie.Application.Income.IIncomeImportService>(), "Bulk upload income");
+        window.ShowDialog();
+        if (window.Upload.ImportedAny)
+            _vm.Refresh();
+    }
+
     private void OnEditIncome(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement { Tag: Guid id })

@@ -54,7 +54,62 @@ public partial class MainWindow : FluentWindow
         {
             RootNavigation.Navigate(typeof(DashboardPage));
             UpdateBadge();
+            PopulateStatusBar();
+
+            PositionPaneGrip();
+            // Keep the resize grip aligned (and hidden) as the pane is collapsed/expanded via the toggle.
+            System.ComponentModel.DependencyPropertyDescriptor
+                .FromProperty(NavigationView.IsPaneOpenProperty, typeof(NavigationView))
+                .AddValueChanged(RootNavigation, (_, _) => PositionPaneGrip());
         };
+    }
+
+    private const double MinPaneWidth = 150;
+    private const double MaxPaneWidth = 420;
+
+    private void OnPaneResize(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    {
+        RootNavigation.OpenPaneLength =
+            Math.Clamp(RootNavigation.OpenPaneLength + e.HorizontalChange, MinPaneWidth, MaxPaneWidth);
+        PositionPaneGrip();
+    }
+
+    // Park the grip on the pane's right edge; only meaningful while the pane is open.
+    private void PositionPaneGrip()
+    {
+        PaneResizeGrip.Margin = new Thickness(RootNavigation.OpenPaneLength - (PaneResizeGrip.Width / 2), 0, 0, 0);
+        PaneResizeGrip.Visibility = RootNavigation.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    // The bottom status bar is informational (encryption · storage · last backup · auto-lock).
+    private void PopulateStatusBar()
+    {
+        try
+        {
+            var services = ((App)System.Windows.Application.Current).Services;
+            Richie.Application.Settings.AppSettingsData settings =
+                services.GetRequiredService<Richie.Application.Settings.IAppSettingsService>().Get();
+            long bytes = services.GetRequiredService<Richie.Application.Profile.IProfileService>().Get().StorageBytes;
+
+            StatusStorage.Text = $"Storage: {FormatBytes(bytes)}";
+            StatusBackup.Text = settings.LastBackupUtc is { } backup
+                ? $"Last backup: {backup.ToLocalTime():d}"
+                : "Last backup: never";
+            StatusLock.Text = $"Auto-lock: {settings.SessionLockMinutes} min";
+        }
+        catch
+        {
+            // Status bar is non-essential — never let it block the shell.
+        }
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        string[] units = ["bytes", "KB", "MB", "GB"];
+        double size = bytes;
+        int unit = 0;
+        while (size >= 1024 && unit < units.Length - 1) { size /= 1024; unit++; }
+        return $"{size:0.#} {units[unit]}";
     }
 
     private void UpdateBadge()

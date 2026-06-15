@@ -121,7 +121,7 @@ public partial class AssetDetailsViewModel : ObservableObject
             rows.Add(new DetailRow(label, Money(value.Value)));
     }
 
-    private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+    private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 
     private static Brush Frozen(Color color)
     {

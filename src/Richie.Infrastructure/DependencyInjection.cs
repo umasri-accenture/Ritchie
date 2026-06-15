@@ -61,6 +61,7 @@ public static class DependencyInjection
         services.AddSingleton<IExpenseImportService, ExpenseImportService>();
         services.AddSingleton<IExpenseDocumentService, ExpenseDocumentService>();
         services.AddSingleton<IIncomeService, Income.IncomeService>();
+        services.AddSingleton<IIncomeImportService, Income.IncomeImportService>();
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IVaultGate, VaultGate>();
         services.AddSingleton<IVaultService, VaultService>();

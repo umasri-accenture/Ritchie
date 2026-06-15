@@ -150,7 +150,7 @@ public sealed class SipService : ISipService
                     Amount = schedule.Amount
                 });
 
-                string amount = schedule.Amount.ToString("N2", CultureInfo.CurrentCulture);
+                string amount = Richie.Application.Common.CurrencyFormatter.Format(schedule.Amount);
                 NotificationWriter.Add(db, schedule.UserId, nowUtc, NotificationType.SipPosted,
                     "SIP invested", $"{amount} was added to '{asset.Name}'.");
                 AuditWriter.Add(db, schedule.UserId, nowUtc, Module, AuditAction.Update, nameof(Asset), asset.Id,

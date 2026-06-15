@@ -23,7 +23,7 @@ public partial class IncomeViewModel : ObservableObject
     {
         Items = new ObservableCollection<IncomeSummary>(_income.GetRecent());
         IsEmpty = Items.Count == 0;
-        MonthlyTotalText = _income.GetMonthlyTotal().ToString("N2", CultureInfo.CurrentCulture);
+        MonthlyTotalText = Richie.Application.Common.CurrencyFormatter.Format(_income.GetMonthlyTotal());
     }
 
     public void Delete(Guid id)

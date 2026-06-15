@@ -95,6 +95,30 @@ public sealed class ProfileService : IProfileService
         return (Math.Clamp(score, 0, 100), string.Join(" · ", parts));
     }
 
+    public IReadOnlyList<Achievement> GetAchievements()
+    {
+        Guid userId = UserId;
+        using RichieDbContext db = _factory.Create();
+
+        int assets = db.Assets.AsNoTracking().Count(a => a.UserId == userId);
+        int distinctTypes = db.Assets.AsNoTracking().Where(a => a.UserId == userId)
+            .Select(a => a.Type).Distinct().Count();
+        int expenses = db.Expenses.AsNoTracking().Count(e => e.UserId == userId);
+        int vault = db.VaultEntries.AsNoTracking().Count(v => v.UserId == userId);
+        int policies = db.InsurancePolicies.AsNoTracking().Count(p => p.UserId == userId);
+        int goals = db.Goals.AsNoTracking().Count(g => g.UserId == userId);
+
+        return
+        [
+            new Achievement("First Asset", "Add your first asset", "🏦", assets >= 1),
+            new Achievement("Diversifier", "Hold 3 or more asset types", "🧩", distinctTypes >= 3),
+            new Achievement("Expense Tracker", "Log 25 or more expenses", "🧾", expenses >= 25),
+            new Achievement("Vault Keeper", "Store a password in the vault", "🔐", _gate.IsConfigured() && vault >= 1),
+            new Achievement("Protected", "Add an insurance policy", "🛡️", policies >= 1),
+            new Achievement("Goal Setter", "Create a financial goal", "🎯", goals >= 1),
+        ];
+    }
+
     private static long StorageBytes()
     {
         if (!Directory.Exists(AppPaths.DataDirectory))

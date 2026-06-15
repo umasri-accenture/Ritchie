@@ -24,12 +24,18 @@
         <ui:TitleBar Grid.Row="0" Title="Income" />
 
         <Grid Grid.Row="1" Margin="24,8,24,12">
-            <StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
                 <ui:TextBlock Appearance="Secondary" Text="Income this month" />
                 <ui:TextBlock FontTypography="TitleLarge" Foreground="#0F7B0F" Text="{Binding MonthlyTotalText}" />
             </StackPanel>
-            <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Add income"
-                       Appearance="Primary" Click="OnAddIncome" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
+                <ui:Button Content="Add income" Appearance="Primary" Click="OnAddIncome" />
+            </StackPanel>
         </Grid>
 
         <DataGrid Grid.Row="2" Margin="24,0,24,16" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
@@ -37,7 +43,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=d}" Width="Auto" />
                 <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="*" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat=N2}" Width="Auto" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding Amount, StringFormat='₹{0:N2}'}" Width="Auto" />
                 <DataGridTemplateColumn Header="Actions" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

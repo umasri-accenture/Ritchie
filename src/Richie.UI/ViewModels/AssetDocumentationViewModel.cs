@@ -55,5 +55,5 @@ public partial class AssetDocumentationViewModel : ObservableObject
         Refresh();
     }
 
-    private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+    private static string Money(decimal value) => Richie.Application.Common.CurrencyFormatter.Format(value);
 }
