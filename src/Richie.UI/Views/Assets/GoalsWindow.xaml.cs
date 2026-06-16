@@ -37,10 +37,20 @@ public partial class GoalsWindow : FluentWindow
 
     private void OpenEditor(Guid? goalId)
     {
-        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<AddEditGoalWindow>();
-        window.Owner = this;
-        window.Editor.Initialize(goalId);
-        if (window.ShowDialog() == true)
+        bool? result;
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<AddEditGoalWindow>();
+            window.Owner = this;
+            window.Editor.Initialize(goalId);
+            result = window.ShowDialog();
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
+        if (result == true)
             _vm.Refresh();
     }
 }

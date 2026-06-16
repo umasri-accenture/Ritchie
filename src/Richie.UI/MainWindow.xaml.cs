@@ -52,6 +52,12 @@ public partial class MainWindow : FluentWindow
 
         Loaded += (_, _) =>
         {
+            // Apply the user's saved theme preference when main window loads
+            var app = (App)System.Windows.Application.Current;
+            var settingsService = app.Services.GetRequiredService<Richie.Application.Settings.IAppSettingsService>();
+            string savedTheme = settingsService.Get().Theme;
+            ViewModels.SettingsViewModel.ApplyTheme(savedTheme);
+            
             RootNavigation.Navigate(typeof(DashboardPage));
             UpdateBadge();
             PopulateStatusBar();

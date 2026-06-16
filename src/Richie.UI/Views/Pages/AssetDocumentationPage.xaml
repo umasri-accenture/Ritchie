@@ -7,124 +7,687 @@
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       xmlns:conv="clr-namespace:Richie.UI.Converters"
       mc:Ignorable="d"
-      Title="Asset Documentation">
+      Title="Asset Documentation"
+      FontSize="15">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <conv:ProfitLossBrushConverter x:Key="PnlBrush" />
+        <conv:AssetPageProfitLossBrushConverter x:Key="AssetPnlBrush" />
+
+        <!-- Overrides to replace every red accent with Primary: #2563EB -->
+        <Color x:Key="SystemAccentColor">#2563EB</Color>
+        <SolidColorBrush x:Key="SystemAccentColorBrush" Color="#2563EB" />
+        <Color x:Key="SystemAccentColorLight1">#3B82F6</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="#3B82F6" />
+        <Color x:Key="SystemAccentColorLight2">#60A5FA</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="#60A5FA" />
+        <Color x:Key="SystemAccentColorLight3">#93C5FD</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="#93C5FD" />
+        
+        <Color x:Key="SystemAccentColorDark1">#1D4ED8</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="#1D4ED8" />
+        <Color x:Key="SystemAccentColorDark2">#1E40AF</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="#1E40AF" />
+        <Color x:Key="SystemAccentColorDark3">#1E3A8A</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="#1E3A8A" />
+
+        <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#2563EB" />
+        <SolidColorBrush x:Key="BrandSecondaryBrush" Color="#0F766E" />
+        <SolidColorBrush x:Key="BrandAccentBrush" Color="#7C3AED" />
+
+        <!-- Custom button style to guarantee blue fill state by default, hover, and press -->
+        <Style x:Key="BluePrimaryButtonStyle" TargetType="ui:Button">
+            <Setter Property="Background" Value="#2563EB" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#1D4ED8" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ui:Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1D4ED8" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#1E40AF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E3A8A" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#1E3A8A" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#E2E8F0" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#E2E8F0" />
+                                <Setter Property="Foreground" Value="#94A3B8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
-    <Grid Margin="24">
+    
+    <Grid Margin="16">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Grid Grid.Row="0" Margin="0,0,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Asset Documentation"
-                          VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+                          Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                <ui:Button Content="Goals" Margin="0,0,8,0" Click="OnOpenGoals" />
-                <ui:Button Content="Bulk upload" Margin="0,0,8,0" Click="OnBulkUpload" />
-                <ui:Button Content="Add asset" Appearance="Primary" Click="OnAddAsset" />
+                <ui:Button Width="135" Height="36" Margin="0,0,8,0" Click="OnOpenGoals" ToolTip="View financial goals">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Target24" FontSize="15" Margin="0,0,4,0" />
+                        <TextBlock Text="Goals" FontSize="14" VerticalAlignment="Center" />
+                    </StackPanel>
+                </ui:Button>
+                <ui:Button Width="135" Height="36" Margin="0,0,8,0" Click="OnBulkUpload" ToolTip="Upload multiple assets">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowUpload24" FontSize="15" Margin="0,0,4,0" />
+                        <TextBlock Text="Bulk upload" FontSize="14" VerticalAlignment="Center" />
+                    </StackPanel>
+                </ui:Button>
+                <ui:Button Width="135" Height="36" Click="OnAddAsset" Style="{StaticResource BluePrimaryButtonStyle}" ToolTip="Add a new asset">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Add24" FontSize="16" Margin="0,0,4,0" />
+                        <TextBlock Text="Add asset" FontSize="14" VerticalAlignment="Center" />
+                    </StackPanel>
+                </ui:Button>
             </StackPanel>
         </Grid>
 
-        <!-- Summary + allocation -->
-        <Grid Grid.Row="1" Margin="0,0,0,16">
+        <!-- Portfolio Summary & KPI Cards Row -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="1.4*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
-            <ui:Card Grid.Column="0">
+            
+            <!-- 1. Total Portfolio Value Card -->
+            <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch">
                 <StackPanel>
-                    <ui:TextBlock Appearance="Secondary" Text="Total portfolio value" />
-                    <ui:TextBlock FontTypography="TitleLarge" Text="{Binding TotalCurrentValueText}" />
-                    <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0"
-                                  Text="{Binding TotalInvestedText, StringFormat='Invested: {0}'}" />
-                    <ui:TextBlock Appearance="Secondary"
-                                  Text="{Binding TotalProfitLossText, StringFormat='Profit / Loss: {0}'}" />
+                    <ui:TextBlock Appearance="Secondary" FontSize="13" FontTypography="Caption" Text="TOTAL PORTFOLIO VALUE" FontWeight="SemiBold" />
+                    <ui:TextBlock FontSize="30" FontWeight="Bold" Margin="0,2,0,4" Text="{Binding TotalCurrentValueText}" Foreground="{StaticResource SystemAccentColorBrush}" />
+                    
+                    <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,4,0,4" />
+                    
+                    <UniformGrid Columns="2">
+                        <StackPanel Margin="0,0,4,0">
+                            <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Invested" />
+                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalInvestedValueText}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Margin="4,0,0,0">
+                            <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Current" />
+                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalCurrentValueText}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </UniformGrid>
+                    
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Profit / Loss" />
+                            <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="{Binding TotalProfitLossValueText}">
+                                <ui:TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
+                                                <Setter Property="Foreground" Value="#EA580C" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
+                                                <Setter Property="Foreground" Value="#0F766E" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:TextBlock.Style>
+                            </ui:TextBlock>
+                        </StackPanel>
+                        <Border Grid.Column="1" CornerRadius="4" Padding="6,2" VerticalAlignment="Bottom" Height="24">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
+                                            <Setter Property="Background" Value="#FFEDD5" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
+                                            <Setter Property="Background" Value="#CCFBF1" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <ui:TextBlock FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding TotalProfitLossPercentText}">
+                                <ui:TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="True">
+                                                <Setter Property="Foreground" Value="#EA580C" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsProfitLossNegative}" Value="False">
+                                                <Setter Property="Foreground" Value="#0F766E" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:TextBlock.Style>
+                            </ui:TextBlock>
+                        </Border>
+                    </Grid>
                 </StackPanel>
             </ui:Card>
-
-            <ui:Card Grid.Column="2">
+            
+            <!-- 2. Asset Diversification Score Card -->
+            <ui:Card Grid.Column="2" Padding="12" VerticalAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    
+                    <ui:TextBlock Grid.Row="0" Appearance="Secondary" FontSize="13" FontTypography="Caption" Text="DIVERSIFICATION SCORE" FontWeight="SemiBold" />
+                    
+                    <Grid Grid.Row="1" Margin="0,6,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Grid Grid.Column="0" Width="72" Height="72" Margin="0,0,8,0">
+                            <Ellipse Stroke="#E2E8F0" StrokeThickness="6" />
+                            <ui:TextBlock Text="{Binding DiversificationScore}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource SystemAccentColorBrush}" />
+                        </Grid>
+                        
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <ui:TextBlock Text="{Binding DiversificationClassification}" FontSize="22" FontWeight="Bold">
+                                <ui:TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Poor">
+                                                <Setter Property="Foreground" Value="#EA580C" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Moderate">
+                                                <Setter Property="Foreground" Value="#F59E0B" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Good">
+                                                <Setter Property="Foreground" Value="#2563EB" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Excellent">
+                                                <Setter Property="Foreground" Value="#0F766E" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:TextBlock.Style>
+                            </ui:TextBlock>
+                            <ui:TextBlock Appearance="Secondary" FontSize="14" Text="HHI concentration index" Margin="0,1,0,0" />
+                        </StackPanel>
+                    </Grid>
+                    
+                    <StackPanel Grid.Row="2" Margin="0,4,0,0">
+                        <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,0,0,6" />
+                        <Grid Height="10" Background="#F1F5F9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{Binding ScoreGridLength}" />
+                                <ColumnDefinition Width="{Binding RemainingScoreGridLength}" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" CornerRadius="4">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Poor">
+                                                <Setter Property="Background" Value="#EA580C" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Moderate">
+                                                <Setter Property="Background" Value="#F59E0B" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Good">
+                                                <Setter Property="Background" Value="#2563EB" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DiversificationClassification}" Value="Excellent">
+                                                <Setter Property="Background" Value="#0F766E" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </ui:Card>
+            
+            <!-- 3. Top Performing Asset Card -->
+            <ui:Card Grid.Column="4" Padding="12" VerticalAlignment="Stretch">
                 <StackPanel>
-                    <ui:TextBlock FontTypography="BodyStrong" Text="Allocation by asset type" Margin="0,0,0,8" />
-                    <lvc:PieChart Height="220"
-                                  Series="{Binding AllocationSeries}"
-                                  LegendPosition="Hidden"
-                                  Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    <ItemsControl ItemsSource="{Binding Allocation}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="0,2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse Grid.Column="0" Width="10" Height="10" Fill="{Binding Swatch}"
-                                             VerticalAlignment="Center" Margin="0,0,8,0" />
-                                    <ui:TextBlock Grid.Column="1" Text="{Binding TypeName}" HorizontalAlignment="Left" />
-                                    <ui:TextBlock Grid.Column="2" HorizontalAlignment="Right">
-                                        <Run Text="{Binding ValueText, Mode=OneWay}" />
-                                        <Run Text="{Binding PercentText, Mode=OneWay}" />
-                                    </ui:TextBlock>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <ui:TextBlock Appearance="Secondary" Text="No assets yet."
-                                  Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <ui:TextBlock Appearance="Secondary" FontSize="13" FontTypography="Caption" Text="TOP PERFORMING ASSET" FontWeight="SemiBold" />
+                    
+                    <ui:TextBlock FontSize="20" FontWeight="Bold" Margin="0,6,0,2" Text="{Binding TopPerformingAssetName}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Height="26" />
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                        <ui:SymbolIcon Symbol="DataTrending24" FontSize="18" Foreground="#0F766E" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <ui:TextBlock FontSize="22" FontWeight="Bold" Text="{Binding TopPerformingAssetReturnText}" Foreground="#0F766E" VerticalAlignment="Center" />
+                    </StackPanel>
+                    
+                    <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,6,0,4" />
+                    
+                    <ui:TextBlock Appearance="Secondary" FontSize="13" Text="Highest rate of return" />
+                </StackPanel>
+            </ui:Card>
+            
+            <!-- 4. Asset Allocation Insights Card -->
+            <ui:Card Grid.Column="6" Padding="12" VerticalAlignment="Stretch">
+                <StackPanel>
+                    <ui:TextBlock Appearance="Secondary" FontSize="13" FontTypography="Caption" Text="PORTFOLIO INSIGHTS" FontWeight="SemiBold" />
+                    
+                    <Grid Margin="0,6,0,0" Height="82">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <ui:SymbolIcon Symbol="Lightbulb24" FontSize="22" Foreground="#F59E0B" Margin="0,1,6,0" VerticalAlignment="Top" />
+                        <ui:TextBlock Grid.Column="1" Text="{Binding InsightText}" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" LineHeight="18" />
+                    </Grid>
                 </StackPanel>
             </ui:Card>
         </Grid>
 
-        <!-- Asset list -->
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
+        <!-- Charts Section Row -->
+        <Grid Grid.Row="2" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- Left Card: Donut Chart, Legend, Allocation Summary -->
+            <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch">
+                <StackPanel>
+                    <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Asset Allocation (Donut)" Margin="0,0,0,6" />
+                    
+                    <Grid Height="230" Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <lvc:PieChart Grid.Column="0" Width="330" Height="220" HorizontalAlignment="Center" Margin="0,0,12,0"
+                                      Series="{Binding AllocationSeries}"
+                                      LegendPosition="Hidden" />
+                        
+                        <!-- Legend Table with small spacing and merged name & value to reduce gap -->
+                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="8,0,0,0">
+                            <ItemsControl ItemsSource="{Binding Allocation}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse Grid.Column="0" Width="10" Height="10" Fill="{Binding Swatch}"
+                                                     VerticalAlignment="Center" Margin="0,0,6,0" />
+                                            <ui:TextBlock Grid.Column="1" FontSize="13.5" VerticalAlignment="Center" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis">
+                                                <Run Text="{Binding TypeName}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                            </ui:TextBlock>
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                <ui:TextBlock Text="{Binding ValueText}" FontSize="13.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                                <ui:TextBlock Text="{Binding PercentText}" FontSize="13.5" Foreground="#0F766E" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                    
+                    <ui:TextBlock Appearance="Secondary" Text="No assets yet." HorizontalAlignment="Center" Margin="0,30,0,0" Height="100"
+                                  Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    
+                    <Border BorderThickness="0,1,0,0" BorderBrush="#E2E8F0" Margin="0,6,0,6" />
+                    
+                    <!-- Asset Allocation Summary Details -->
+                    <ui:TextBlock FontSize="15.5" FontWeight="SemiBold" Text="Asset Allocation Summary" Margin="0,0,0,4" Foreground="{StaticResource SystemAccentColorBrush}" />
+                    <UniformGrid Columns="2" Rows="2">
+                        <StackPanel Margin="0,1">
+                            <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Largest Asset Category" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding LargestAsset}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,1">
+                            <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Portfolio Concentration" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding PortfolioConcentration}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,1">
+                            <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Number of Asset Categories" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding NumberOfCategories}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,1">
+                            <ui:TextBlock FontSize="12.5" Appearance="Secondary" Text="Most Diversified Category" />
+                            <ui:TextBlock FontSize="15" FontWeight="SemiBold" Text="{Binding MostDiversifiedCategory}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </ui:Card>
+            
+            <!-- Right Card: Documentation Checklist -->
+            <ui:Card Grid.Column="2" Padding="12" VerticalAlignment="Stretch">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0">
+                        <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Documentation Checklist" Margin="0,0,0,6" />
+                        
+                        <!-- Empty state when no assets exist -->
+                        <ui:TextBlock Appearance="Secondary" Text="No assets yet." HorizontalAlignment="Center" Margin="0,50,0,0" Height="160"
+                                      Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        
+                        <!-- Coverage Status -->
+                        <Grid Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,0,0,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ui:TextBlock FontSize="13" Appearance="Secondary" Text="DOCUMENT COVERAGE" FontWeight="SemiBold" />
+                                <ui:TextBlock Grid.Column="1" FontSize="14.5" FontWeight="Bold" Foreground="#0F766E">
+                                    <Run Text="{Binding DocumentedAssetCount, Mode=OneWay}" />
+                                    <Run Text="of" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="Normal" />
+                                    <Run Text="{Binding TotalAssetCount, Mode=OneWay}" />
+                                    <Run Text="assets" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontWeight="Normal" />
+                                </ui:TextBlock>
+                            </Grid>
+                            
+                            <!-- Progress Bar -->
+                            <ProgressBar Grid.Row="1" Value="{Binding DocumentCoveragePercent, Mode=OneWay}" Minimum="0" Maximum="100" Height="8" Background="#F1F5F9" Foreground="#2563EB" BorderThickness="0" Margin="0,4,0,4" />
+                            
+                            <ui:TextBlock Grid.Row="2" FontSize="12.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                <Run Text="{Binding DocumentCoveragePercent, Mode=OneWay, StringFormat='{}{0}% of your assets have attachments verified.'}" />
+                            </ui:TextBlock>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <!-- Scrollable Undocumented Assets List -->
+                    <Grid Grid.Row="1" Margin="0,6,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAssets}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding UndocumentedAssetCount}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        
+                        <ui:TextBlock Grid.Row="0" FontSize="14.5" FontWeight="SemiBold" Text="Undocumented Assets" Margin="0,0,0,4" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding UndocumentedAssets}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <ui:SymbolIcon Grid.Column="0" Symbol="Warning24" FontSize="16" Foreground="#EA580C" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <ui:TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                                <ui:TextBlock Text="{Binding TypeName}" FontSize="11.5" Appearance="Secondary" />
+                                            </StackPanel>
+                                            <ui:Button Grid.Column="2" Content="Add file"
+                                                       Tag="{Binding Id}" Click="OnDocsAsset"
+                                                       Padding="8,4" FontSize="12"
+                                                       Appearance="Secondary" VerticalAlignment="Center" Margin="8,0,0,0" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                    
+                    <!-- Completion Success State -->
+                    <Grid Grid.Row="1" Margin="0,6,0,0">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding HasAssets}" Value="True" />
+                                            <Condition Binding="{Binding UndocumentedAssetCount}" Value="0" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        
+                        <Border Background="#F0FDF4" BorderBrush="#DCFCE7" BorderThickness="1" CornerRadius="6" Padding="12" VerticalAlignment="Stretch">
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ui:SymbolIcon Grid.Column="0" Symbol="CheckmarkCircle24" FontSize="28" Foreground="#16A34A" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1">
+                                    <ui:TextBlock Text="All Assets Documented!" FontSize="14" FontWeight="SemiBold" Foreground="#14532D" />
+                                    <ui:TextBlock Text="Every asset has supporting attachments uploaded. Great job keeping your portfolio files organized." FontSize="12.5" Foreground="#166534" TextWrapping="Wrap" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </ui:Card>
+        </Grid>
+
+        <!-- Asset list with compact density and sticky headers -->
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Items}" AutoGenerateColumns="False"
                   IsReadOnly="True" CanUserAddRows="False" HeadersVisibility="Column"
-                  GridLinesVisibility="Horizontal">
+                  GridLinesVisibility="Horizontal"
+                  Background="Transparent" BorderThickness="0"
+                  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                  VerticalContentAlignment="Center" FontSize="16.5"
+                  CanUserResizeColumns="True">
+            <DataGrid.Resources>
+                <!-- Reduce cell padding and align content vertically -->
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="8,6" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridCell">
+                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderThickness="0" SnapsToDevicePixels="True">
+                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <!-- Column header style -->
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Padding" Value="8,8" />
+                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+                    <Setter Property="Height" Value="42" />
+                    <Setter Property="FontSize" Value="16" />
+                </Style>
+                <!-- Row style to reduce height -->
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="42" />
+                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+                </Style>
+            </DataGrid.Resources>
+            
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" />
-                <DataGridTextColumn Header="Identifier" Binding="{Binding Identifier}" Width="Auto" />
-                <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat='₹{0:N2}'}" Width="Auto" />
-                <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat='₹{0:N2}'}" Width="Auto" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="Auto" MinWidth="150" />
+                <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" Width="Auto" MinWidth="100" />
+                <DataGridTextColumn Header="Identifier" Binding="{Binding Identifier}" Width="*" />
+                
+                 <DataGridTextColumn Header="Invested" Binding="{Binding InvestedAmount, StringFormat='₹{0:N2}'}" Width="Auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Setter Property="FontWeight" Value="Medium" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                
+                <DataGridTextColumn Header="Current" Binding="{Binding CurrentValue, StringFormat='₹{0:N2}'}" Width="Auto">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Setter Property="FontWeight" Value="Medium" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                
                 <DataGridTextColumn Header="P&amp;L" Binding="{Binding ProfitLoss, StringFormat='₹{0:N2}'}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="{Binding ProfitLoss, Converter={StaticResource PnlBrush}}" />
+                            <Setter Property="Foreground" Value="{Binding ProfitLoss, Converter={StaticResource AssetPnlBrush}}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="P&amp;L %" Binding="{Binding ProfitLossPercent, StringFormat=&#39;{}{0:+0.0;-0.0;0.0}&#39;}" Width="Auto">
+                
+                <DataGridTextColumn Header="P&amp;L %" Binding="{Binding ProfitLossPercent, StringFormat='{}{0:+0.0;-0.0;0.0}%'}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="{Binding ProfitLossPercent, Converter={StaticResource PnlBrush}}" />
+                            <Setter Property="Foreground" Value="{Binding ProfitLossPercent, Converter={StaticResource AssetPnlBrush}}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="Excl." Binding="{Binding IsExcludedFromPortfolio}" Width="Auto" />
+                             <DataGridTemplateColumn Header="Excl." Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <!-- CheckBox visible only for GoldJewellery -->
+                                <CheckBox x:Name="exclCheckBox" IsChecked="{Binding IsExcludedFromPortfolio, Mode=OneWay}"
+                                          Click="OnExclClick"
+                                          Tag="{Binding Id}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          ToolTip="Exclude this gold jewellery asset from total portfolio valuation.">
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                                
+                                <!-- Cross mark icon visible for other asset types -->
+                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               ToolTip="Only Gold Jewellery assets can be excluded from portfolio valuation.">
+                                    <ui:SymbolIcon.Style>
+                                        <Style TargetType="ui:SymbolIcon">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ui:SymbolIcon.Style>
+                                </ui:SymbolIcon>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
                 <DataGridTemplateColumn Header="Actions" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <ui:Button Content="View" Padding="8,2" Margin="0,0,4,0"
-                                           Tag="{Binding Id}" Click="OnViewAsset" />
-                                <ui:Button Content="SIP" Padding="8,2" Margin="0,0,4,0"
-                                           Tag="{Binding Id}" Click="OnSipAsset" />
-                                <ui:Button Content="Docs" Padding="8,2" Margin="0,0,4,0"
-                                           Tag="{Binding Id}" Click="OnDocsAsset" />
-                                <ui:Button Content="Edit" Padding="8,2" Margin="0,0,4,0"
-                                           Tag="{Binding Id}" Click="OnEditAsset" />
-                                <ui:Button Content="Delete" Padding="8,2"
-                                           Tag="{Binding Id}" Click="OnDeleteAsset" />
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
+                                           Tag="{Binding Id}" Click="OnViewAsset" ToolTip="View Details"
+                                           AutomationProperties.Name="View Asset Details">
+                                    <ui:SymbolIcon Symbol="Eye24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </ui:Button>
+                                <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
+                                           Tag="{Binding Id}" Click="OnSipAsset" ToolTip="SIP Scheduler"
+                                           AutomationProperties.Name="Manage SIP Schedule">
+                                    <ui:SymbolIcon Symbol="ArrowSync24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </ui:Button>
+                                <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
+                                           Tag="{Binding Id}" Click="OnDocsAsset" ToolTip="View Documents"
+                                           AutomationProperties.Name="View Documents">
+                                    <ui:SymbolIcon Symbol="Document24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </ui:Button>
+                                <ui:Button Padding="0" Margin="0,0,3,0" Height="24" Width="28"
+                                           Tag="{Binding Id}" Click="OnEditAsset" ToolTip="Edit Asset"
+                                           AutomationProperties.Name="Edit Asset">
+                                    <ui:SymbolIcon Symbol="Edit24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </ui:Button>
+                                <ui:Button Padding="0" Height="24" Width="28" Appearance="Secondary"
+                                           Tag="{Binding Id}" Click="OnDeleteAsset" ToolTip="Delete Asset"
+                                           AutomationProperties.Name="Delete Asset">
+                                    <ui:SymbolIcon Symbol="Delete24" FontSize="13.5" Foreground="#2563EB" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                </ui:Button>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

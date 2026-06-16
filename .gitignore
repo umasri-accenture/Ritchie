@@ -11,6 +11,7 @@ x86/
 .idea/
 *.user
 *.suo
+*_wpftmp.csproj
 
 # Test results & coverage
 [Tt]est[Rr]esults/

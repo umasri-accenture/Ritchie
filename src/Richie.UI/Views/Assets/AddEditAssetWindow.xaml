@@ -13,6 +13,62 @@
         WindowCornerPreference="Round">
     <ui:FluentWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        
+        <!-- Overrides to replace every red accent with Primary: #2563EB -->
+        <Color x:Key="SystemAccentColor">#2563EB</Color>
+        <SolidColorBrush x:Key="SystemAccentColorBrush" Color="#2563EB" />
+        <Color x:Key="SystemAccentColorLight1">#3B82F6</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="#3B82F6" />
+        <Color x:Key="SystemAccentColorLight2">#60A5FA</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="#60A5FA" />
+        <Color x:Key="SystemAccentColorLight3">#93C5FD</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="#93C5FD" />
+        
+        <Color x:Key="SystemAccentColorDark1">#1D4ED8</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="#1D4ED8" />
+        <Color x:Key="SystemAccentColorDark2">#1E40AF</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="#1E40AF" />
+        <Color x:Key="SystemAccentColorDark3">#1E3A8A</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="#1E3A8A" />
+
+        <!-- Custom button style to guarantee blue fill state by default, hover, and press -->
+        <Style x:Key="BluePrimaryButtonStyle" TargetType="ui:Button">
+            <Setter Property="Background" Value="#2563EB" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#1D4ED8" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ui:Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1D4ED8" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#1E40AF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E3A8A" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#1E3A8A" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#E2E8F0" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#E2E8F0" />
+                                <Setter Property="Foreground" Value="#94A3B8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </ui:FluentWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -81,7 +137,7 @@
                     <ui:TextBox PlaceholderText="Appraiser name" Margin="0,0,0,10"
                                 Text="{Binding AppraiserName, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox Content="Exclude from portfolio valuation" Margin="0,0,0,10"
-                              IsChecked="{Binding IsExcludedFromPortfolio}" />
+                               IsChecked="{Binding IsExcludedFromPortfolio}" />
                 </StackPanel>
 
                 <StackPanel Visibility="{Binding ShowPolicy, Converter={StaticResource BoolToVis}}">
@@ -107,7 +163,7 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="24,8,24,16">
             <ui:Button Content="Cancel" Margin="0,0,8,0" Command="{Binding CancelCommand}" />
-            <ui:Button Content="Save" Appearance="Primary" Command="{Binding SaveCommand}" />
+            <ui:Button Content="Save" Style="{StaticResource BluePrimaryButtonStyle}" Command="{Binding SaveCommand}" />
         </StackPanel>
     </Grid>
 </ui:FluentWindow>

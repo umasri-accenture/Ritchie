@@ -8,19 +8,65 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
+                <ResourceDictionary Source="Resources/DarkModeTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Brand semantic brushes (status triad). green = good, amber = attention, red = critical. -->
             <SolidColorBrush x:Key="BrandSuccessBrush" Color="#1FA56C" />
             <SolidColorBrush x:Key="BrandWarningBrush" Color="#DE9326" />
             <SolidColorBrush x:Key="BrandDangerBrush" Color="#CE2E20" />
-            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#BE3A2F" />
+            <SolidColorBrush x:Key="BrandPrimaryBrush" Color="#3B82F6" />
 
             <!-- Soft-gold app background (gentle vertical gradient; white cards sit on top). -->
             <LinearGradientBrush x:Key="BrandBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Color="#F7EDD4" Offset="0" />
                 <GradientStop Color="#E6CF97" Offset="1" />
             </LinearGradientBrush>
+
+            <!-- Professional Dracula-inspired Dark Mode Colors -->
+            <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#1E1E2E" />
+            <SolidColorBrush x:Key="DarkModeCardBrush" Color="#282A36" />
+            <SolidColorBrush x:Key="DarkModeSecondaryCardBrush" Color="#313244" />
+            <SolidColorBrush x:Key="DarkModeTextBrush" Color="#F8F8F2" />
+            <SolidColorBrush x:Key="DarkModeSecondaryTextBrush" Color="#E0E0E0" />
+            <SolidColorBrush x:Key="DarkModeTertiaryTextBrush" Color="#B0B0B0" />
+            <SolidColorBrush x:Key="DarkModeBorderBrush" Color="#44475A" />
+            <SolidColorBrush x:Key="DarkModeHoverBrush" Color="#3A3D48" />
+
+            <!-- Professional Button Colors (Blue/Teal instead of Red) -->
+            <SolidColorBrush x:Key="DarkModeButtonPrimaryBrush" Color="#3B82F6" />
+            <SolidColorBrush x:Key="DarkModeButtonPrimaryHoverBrush" Color="#2563EB" />
+            <SolidColorBrush x:Key="DarkModeButtonSecondaryBrush" Color="#6B7280" />
+            <SolidColorBrush x:Key="DarkModeButtonSecondaryHoverBrush" Color="#4B5563" />
+
+            <!-- Light Mode Text Overrides for Dark Theme -->
+            <Style x:Key="DarkModeTextBlockStyle" TargetType="TextBlock">
+                <Style.Triggers>
+                    <Trigger Property="Background" Value="{x:Null}">
+                        <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Style for ComboBox in Dark Mode -->
+            <Style x:Key="DarkModeComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
+                <Setter Property="Background" Value="{StaticResource DarkModeCardBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource DarkModeBorderBrush}" />
+            </Style>
+
+            <!-- Style for CheckBox in Dark Mode -->
+            <Style x:Key="DarkModeCheckBoxStyle" TargetType="CheckBox">
+                <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+            </Style>
+
+            <!-- Style for Button in Dark Mode -->
+            <Style x:Key="DarkModeButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Background" Value="{StaticResource DarkModeButtonSecondaryBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource DarkModeTextBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource DarkModeBorderBrush}" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
