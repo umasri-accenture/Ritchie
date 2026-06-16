@@ -7,7 +7,7 @@
       xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
       xmlns:conv="clr-namespace:Richie.UI.Converters"
       mc:Ignorable="d"
-      Title="Asset Documentation"
+      Title="Assets"
       FontSize="15">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -88,7 +88,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Asset Documentation"
+            <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Assets"
                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <ui:Button Width="135" Height="36" Margin="0,0,8,0" Click="OnOpenGoals" ToolTip="View financial goals">
@@ -240,7 +240,7 @@
                                     </Style>
                                 </ui:TextBlock.Style>
                             </ui:TextBlock>
-                            <ui:TextBlock Appearance="Secondary" FontSize="14" Text="HHI concentration index" Margin="0,1,0,0" />
+                            <ui:TextBlock Appearance="Secondary" FontSize="12" Text="HHI concentration index" Margin="0,1,0,0" />
                         </StackPanel>
                     </Grid>
                     
@@ -322,7 +322,7 @@
             <!-- Left Card: Donut Chart, Legend, Allocation Summary -->
             <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch">
                 <StackPanel>
-                    <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Asset Allocation (Donut)" Margin="0,0,0,6" />
+                    <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Asset Allocation" Margin="0,0,0,6" />
                     
                     <Grid Height="230" Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Grid.ColumnDefinitions>
@@ -525,7 +525,8 @@
                   Background="Transparent" BorderThickness="0"
                   HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                   VerticalContentAlignment="Center" FontSize="16.5"
-                  CanUserResizeColumns="True">
+                  CanUserResizeColumns="True"
+                  PreviewMouseLeftButtonDown="OnDataGridCellPreviewMouseLeftButtonDown">
             <DataGrid.Resources>
                 <!-- Reduce cell padding and align content vertically -->
                 <Style TargetType="DataGridCell">
@@ -621,39 +622,13 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
-                                <!-- CheckBox visible only for GoldJewellery -->
-                                <CheckBox x:Name="exclCheckBox" IsChecked="{Binding IsExcludedFromPortfolio, Mode=OneWay}"
+                                <CheckBox x:Name="exclCheckBox"
+                                          IsChecked="{Binding IsExcludedFromPortfolio, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Click="OnExclClick"
                                           Tag="{Binding Id}"
                                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                                          ToolTip="Exclude this gold jewellery asset from total portfolio valuation.">
-                                    <CheckBox.Style>
-                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
-                                                    <Setter Property="Visibility" Value="Visible" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </CheckBox.Style>
-                                </CheckBox>
-                                
-                                <!-- Cross mark icon visible for other asset types -->
-                                <ui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                                               ToolTip="Only Gold Jewellery assets can be excluded from portfolio valuation.">
-                                    <ui:SymbolIcon.Style>
-                                        <Style TargetType="ui:SymbolIcon">
-                                            <Setter Property="Visibility" Value="Visible" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Type}" Value="GoldJewellery">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ui:SymbolIcon.Style>
-                                </ui:SymbolIcon>
+                                          ToolTip="Exclude this asset from total portfolio valuation.
+(Portfolio KPIs update in real time.)" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

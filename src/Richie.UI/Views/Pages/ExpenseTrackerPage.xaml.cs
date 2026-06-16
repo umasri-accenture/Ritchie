@@ -20,6 +20,51 @@ public partial class ExpenseTrackerPage : Page
 
     private ExpenseTrackerViewModel Vm => (ExpenseTrackerViewModel)DataContext;
 
+    private void OnSearchTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        if (Vm == null)
+            return;
+
+        // Real-time filtering based on the existing SearchText value.
+        // Business logic remains in the ViewModel.
+        Vm.ApplyFilter();
+    }
+
+    private void OnExpenseGridPreviewMouseLeftButtonDown(object? sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+
+        // Ensures single-click interaction with embedded controls (CheckBox / Buttons)
+        // even when the DataGrid is IsReadOnly.
+        if (e.Handled)
+            return;
+
+        if (e.OriginalSource is not DependencyObject original)
+            return;
+
+        // Do not mark checkbox clicks as handled; otherwise toggle can be swallowed depending on
+        // DataGrid/visual tree behavior.
+        //
+        // Keep this handler only to allow embedded Buttons/CheckBox to function normally.
+        // Marking button clicks as handled can prevent the RoutedEvent/Click from reaching the button.
+        // Let the buttons/checkbox handle their own input.
+        // (No-op)
+    }
+
+    private static T? FindAncestor<T>(DependencyObject current) where T : DependencyObject
+    {
+        var d = current;
+        while (d != null)
+        {
+            if (d is T t)
+                return t;
+            d = System.Windows.Media.VisualTreeHelper.GetParent(d);
+        }
+
+        return null;
+    }
+
+
+
     private void OnAddExpense(object sender, RoutedEventArgs e) => OpenEditor(null);
 
     private void OnIncome(object sender, RoutedEventArgs e)

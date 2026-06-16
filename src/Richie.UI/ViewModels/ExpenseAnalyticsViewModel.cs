@@ -88,7 +88,7 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
         IReadOnlyList<PeriodDatum> data = _analytics.GetMonthlyTotals(12);
         MonthlySeries = [new ColumnSeries<double>
             { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
-        MonthlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 30 }];
+        MonthlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 0 }];
     }
 
     private void BuildYearly()
@@ -97,7 +97,7 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
         HasYearlyData = data.Count > 0;
         YearlySeries = [new ColumnSeries<double>
             { Values = data.Select(d => (double)d.Amount).ToArray(), Name = "Spend", Fill = BrandPalette.Solid(BrandPalette.Primary) }];
-        YearlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray() }];
+        YearlyAxes = [new Axis { Labels = data.Select(d => d.Label).ToArray(), LabelsRotation = 0 }];
     }
 
     private void BuildBudgets()
@@ -124,11 +124,13 @@ public partial class ExpenseAnalyticsViewModel : ObservableObject
 
     private static Brush StatusBrush(BudgetStatus status)
     {
+        // Make "good/over" visually neutral (no strong green/red).
+        // Warning stays orange; Unset stays gray.
         string hex = status switch
         {
-            BudgetStatus.Good => "#2E7D32",
-            BudgetStatus.Warning => "#B26A00",
-            BudgetStatus.Over => "#C42B1C",
+            BudgetStatus.Good => "#2563EB",     // blue
+            BudgetStatus.Warning => "#B26A00",  // orange
+            BudgetStatus.Over => "#7C3AED",     // violet
             _ => "#888888"
         };
         var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
