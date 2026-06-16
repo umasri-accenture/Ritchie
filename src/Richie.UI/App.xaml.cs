@@ -143,6 +143,7 @@ public partial class App : System.Windows.Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+        ShutdownMode = ShutdownMode.OnExplicitShutdown;
         base.OnStartup(e);
 
         // Apply system theme + professional accent up-front. Applying the accent before any theme
@@ -224,6 +225,7 @@ public partial class App : System.Windows.Application
         inactivity.Start();
 
         _main.Show();
+        ShutdownMode = ShutdownMode.OnLastWindowClose;
 
         if (firstLogin)
             _host.Services.GetRequiredService<TourService>().Request();

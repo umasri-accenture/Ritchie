@@ -22,20 +22,37 @@ public partial class AssetDocumentationPage : Page
 
     private void OnOpenGoals(object sender, RoutedEventArgs e)
     {
-        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<GoalsWindow>();
-        window.Owner = Window.GetWindow(this);
-        window.ShowDialog();
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<GoalsWindow>();
+            window.Owner = Window.GetWindow(this);
+            window.ShowDialog();
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
         Vm.Refresh(); // goal links don't change assets, but current values may have been recalculated
     }
 
     private void OnBulkUpload(object sender, RoutedEventArgs e)
     {
         var services = ((App)System.Windows.Application.Current).Services;
-        var window = services.GetRequiredService<BulkUploadWindow>();
-        window.Owner = Window.GetWindow(this);
-        window.Upload.Initialize(services.GetRequiredService<IAssetImportService>(), "Bulk upload assets");
-        window.ShowDialog();
-        if (window.Upload.ImportedAny)
+        BulkUploadWindow? window = null;
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            window = services.GetRequiredService<BulkUploadWindow>();
+            window.Owner = Window.GetWindow(this);
+            window.Upload.Initialize(services.GetRequiredService<IAssetImportService>(), "Bulk upload assets");
+            window.ShowDialog();
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
+        if (window != null && window.Upload.ImportedAny)
             Vm.Refresh();
     }
 
@@ -44,12 +61,21 @@ public partial class AssetDocumentationPage : Page
         if (sender is not FrameworkElement { Tag: Guid id })
             return;
 
-        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<AssetDetailsWindow>();
-        window.Owner = Window.GetWindow(this);
-        window.Details.Initialize(id);
-        window.ShowDialog();
+        bool editRequested;
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<AssetDetailsWindow>();
+            window.Owner = Window.GetWindow(this);
+            window.Details.Initialize(id);
+            window.ShowDialog();
+            editRequested = window.Details.EditRequested;
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
 
-        bool editRequested = window.Details.EditRequested;
         Vm.Refresh(); // exclusion may have changed
         if (editRequested)
             OpenEditor(id);
@@ -67,10 +93,18 @@ public partial class AssetDocumentationPage : Page
             return;
 
         string assetName = Vm.Items.FirstOrDefault(a => a.Id == id)?.Name ?? "Asset";
-        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<SipScheduleWindow>();
-        window.Owner = Window.GetWindow(this);
-        window.Schedule.Initialize(id, assetName);
-        window.ShowDialog();
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<SipScheduleWindow>();
+            window.Owner = Window.GetWindow(this);
+            window.Schedule.Initialize(id, assetName);
+            window.ShowDialog();
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
         Vm.Refresh();
     }
 
@@ -80,10 +114,19 @@ public partial class AssetDocumentationPage : Page
             return;
 
         string assetName = Vm.Items.FirstOrDefault(a => a.Id == id)?.Name ?? "Asset";
-        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<DocumentsWindow>();
-        window.Owner = Window.GetWindow(this);
-        window.Documents.Initialize(id, assetName);
-        window.ShowDialog();
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<DocumentsWindow>();
+            window.Owner = Window.GetWindow(this);
+            window.Documents.Initialize(id, assetName);
+            window.ShowDialog();
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
+        Vm.Refresh();
     }
 
     private void OnDeleteAsset(object sender, RoutedEventArgs e)
@@ -99,13 +142,29 @@ public partial class AssetDocumentationPage : Page
             Vm.Delete(id);
     }
 
+    private void OnExclClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is CheckBox cb && cb.Tag is Guid id)
+            Vm.ToggleExclusion(id, cb.IsChecked ?? false);
+    }
+
     private void OpenEditor(Guid? assetId)
     {
-        var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<AddEditAssetWindow>();
-        window.Owner = Window.GetWindow(this);
-        window.Editor.Initialize(assetId);
+        bool? result;
+        SettingsViewModel.ApplyAccent("#2563EB");
+        try
+        {
+            var window = ((App)System.Windows.Application.Current).Services.GetRequiredService<AddEditAssetWindow>();
+            window.Owner = Window.GetWindow(this);
+            window.Editor.Initialize(assetId);
+            result = window.ShowDialog();
+        }
+        finally
+        {
+            SettingsViewModel.ApplyBrandAccent();
+        }
 
-        if (window.ShowDialog() == true)
+        if (result == true)
             Vm.Refresh();
     }
 }

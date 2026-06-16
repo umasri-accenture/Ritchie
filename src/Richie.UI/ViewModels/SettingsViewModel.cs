@@ -119,6 +119,16 @@ public partial class SettingsViewModel : ObservableObject
         ApplicationAccentColorManager.Apply(accent, theme);
     }
 
+    /// <summary>Applies a custom accent color across the app (e.g. Blue for asset dialogs).</summary>
+    public static void ApplyAccent(string hexColor)
+    {
+        var accent = (Color)ColorConverter.ConvertFromString(hexColor)!;
+        ApplicationTheme theme = ApplicationThemeManager.GetAppTheme();
+        if (theme is ApplicationTheme.Unknown)
+            theme = ApplicationTheme.Light;
+        ApplicationAccentColorManager.Apply(accent, theme);
+    }
+
     private static string Friendly(NotificationType type) => type switch
     {
         NotificationType.SipReminder => "SIP reminders",

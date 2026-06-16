@@ -13,6 +13,23 @@
         WindowCornerPreference="Round">
     <ui:FluentWindow.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        
+        <!-- Overrides to replace every red accent with Primary: #2563EB -->
+        <Color x:Key="SystemAccentColor">#2563EB</Color>
+        <SolidColorBrush x:Key="SystemAccentColorBrush" Color="#2563EB" />
+        <Color x:Key="SystemAccentColorLight1">#3B82F6</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight1Brush" Color="#3B82F6" />
+        <Color x:Key="SystemAccentColorLight2">#60A5FA</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight2Brush" Color="#60A5FA" />
+        <Color x:Key="SystemAccentColorLight3">#93C5FD</Color>
+        <SolidColorBrush x:Key="SystemAccentColorLight3Brush" Color="#93C5FD" />
+        
+        <Color x:Key="SystemAccentColorDark1">#1D4ED8</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark1Brush" Color="#1D4ED8" />
+        <Color x:Key="SystemAccentColorDark2">#1E40AF</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark2Brush" Color="#1E40AF" />
+        <Color x:Key="SystemAccentColorDark3">#1E3A8A</Color>
+        <SolidColorBrush x:Key="SystemAccentColorDark3Brush" Color="#1E3A8A" />
     </ui:FluentWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
