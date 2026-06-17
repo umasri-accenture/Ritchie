@@ -70,6 +70,20 @@ public sealed class AppSettingsService : IAppSettingsService
         return db.AppSettings.FirstOrDefault(s => s.UserId == userId) ?? new AppSettings { UserId = userId };
     }
 
+    public string GetStartupTheme()
+    {
+        try
+        {
+            using RichieDbContext db = _factory.Create();
+            AppSettings? row = db.AppSettings.FirstOrDefault();
+            return row?.Theme ?? "System";
+        }
+        catch
+        {
+            return "System";
+        }
+    }
+
     private static IReadOnlyCollection<NotificationType> ParseTypes(string csv) =>
         csv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .Select(s => Enum.TryParse(s, out NotificationType t) ? (NotificationType?)t : null)

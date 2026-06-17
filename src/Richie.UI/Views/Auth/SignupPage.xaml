@@ -5,7 +5,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Create account">
+      Title="Create account"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}">
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,24">
         <StackPanel Width="420" HorizontalAlignment="Center">
             <ui:TextBlock FontTypography="TitleLarge" HorizontalAlignment="Center" Text="Create your account" />

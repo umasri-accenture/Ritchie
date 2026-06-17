@@ -81,7 +81,7 @@ public partial class ExpenseTrackerViewModel : ObservableObject
             TrendLine("Income", income, BrandPalette.Success),
             TrendLine("Expense", expense, BrandPalette.Danger)
         ];
-        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 30 }];
+        IncomeExpenseAxes = [new Axis { Labels = income.Select(d => d.Label).ToArray(), LabelsRotation = 0 }];
     }
 
     private static LineSeries<double> TrendLine(string name, IReadOnlyList<PeriodDatum> data, SKColor color) => new()

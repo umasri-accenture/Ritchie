@@ -1,3 +1,5 @@
+using System.Globalization;
+using Richie.Application.Common;
 using Richie.Application.Reports;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -21,7 +23,8 @@ public sealed partial class ReportExporter : IReportExporter
             {
                 page.Margin(36);
                 page.Size(PageSizes.A4);
-                page.DefaultTextStyle(x => x.FontSize(10));
+                // Segoe UI / Nirmala UI both carry the ₹ glyph (U+20B9); the bundled default does not.
+                page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Segoe UI", "Nirmala UI", Fonts.Arial));
 
                 page.Header().Column(col =>
                 {
@@ -69,9 +72,39 @@ public sealed partial class ReportExporter : IReportExporter
             foreach (string column in table.Columns)
                 t.Cell().Background(Colors.Grey.Lighten3).Padding(4).Text(column).SemiBold();
 
-            foreach (IReadOnlyList<string> row in table.Rows)
-                foreach (string cell in row)
-                    t.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(4).Text(cell);
+            for (int r = 0; r < table.Rows.Count; r++)
+            {
+                IReadOnlyList<string> row = table.Rows[r];
+                string? rowLink = table.RowLinks is { } links && r < links.Count ? links[r] : null;
+
+                for (int c = 0; c < row.Count; c++)
+                {
+                    IContainer cell = t.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(4);
+
+                    bool isLink = rowLink is { Length: > 0 } && table.LinkColumns?.Contains(c) == true;
+                    if (isLink)
+                        cell = cell.Hyperlink(rowLink!);
+
+                    var span = cell.Text(row[c]);
+                    if (isLink)
+                        span.FontColor("#3E86C6").Underline();          // link styling (brand blue)
+                    else if (table.SignedColumns?.Contains(c) == true)
+                    {
+                        int sign = SignOf(row[c]);
+                        if (sign > 0) span.FontColor(BrandColors.ProfitGreen).SemiBold();
+                        else if (sign < 0) span.FontColor(BrandColors.LossRed).SemiBold();
+                    }
+                }
+            }
         });
+    }
+
+    /// <summary>Sign of a formatted money/percent cell (handles ₹, %, thousands separators, ± sign).</summary>
+    private static int SignOf(string cell)
+    {
+        string s = cell.Replace("₹", "").Replace("%", "").Replace(",", "").Trim();
+        if (decimal.TryParse(s, NumberStyles.Any, CultureInfo.CurrentCulture, out decimal v))
+            return v > 0 ? 1 : v < 0 ? -1 : 0;
+        return 0;
     }
 }

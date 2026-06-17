@@ -28,6 +28,52 @@ public sealed class ReportExporterTests
                     [new ReportChartPoint("Apr", 100), new ReportChartPoint("May", 250), new ReportChartPoint("Jun", 180)]))
         ]);
 
+    // A report exercising signed (P&L) columns and per-row hyperlink columns.
+    private static ReportContent SampleWithSemantics() => new(
+        "Semantic Report", new DateTime(2026, 6, 15, 9, 0, 0, DateTimeKind.Utc), "All data",
+        [
+            new ReportSection("Portfolio summary", [],
+                new ReportTable(
+                    ["Invested", "Current", "P&L", "Return %"],
+                    [["₹1,000.00", "₹1,200.00", "₹200.00", "+20.0%"], ["₹500.00", "₹400.00", "₹-100.00", "-20.0%"]],
+                    SignedColumns: [2, 3])),
+            new ReportSection("Vault accounts", [],
+                new ReportTable(
+                    ["Account", "Password", "Website"],
+                    [["GitHub", "••••", "https://github.com"]],
+                    LinkColumns: [0, 2], RowLinks: ["https://github.com"]))
+        ]);
+
+    [Fact]
+    public void ToXlsx_AppliesProfitLossColours_AndHyperlinks()
+    {
+        byte[] xlsx = new ReportExporter().ToXlsx(SampleWithSemantics());
+
+        using var ms = new MemoryStream(xlsx);
+        using var wb = new ClosedXML.Excel.XLWorkbook(ms);
+
+        ClosedXML.Excel.IXLWorksheet summary = wb.Worksheet("Portfolio summary");
+        int profit = Find(summary, "₹200.00").Style.Font.FontColor.Color.ToArgb();
+        int loss = Find(summary, "₹-100.00").Style.Font.FontColor.Color.ToArgb();
+        Assert.Equal(ClosedXML.Excel.XLColor.FromHtml("#1FA56C").Color.ToArgb(), profit);   // green
+        Assert.Equal(ClosedXML.Excel.XLColor.FromHtml("#CE2E20").Color.ToArgb(), loss);     // red
+
+        ClosedXML.Excel.IXLWorksheet vault = wb.Worksheet("Vault accounts");
+        ClosedXML.Excel.IXLCell account = Find(vault, "GitHub");
+        Assert.True(account.HasHyperlink);
+        Assert.Equal("https://github.com/", account.GetHyperlink().ExternalAddress.ToString());
+    }
+
+    [Fact]
+    public void ToPdf_WithSignedAndLinkedTable_StillProducesAPdf()
+    {
+        byte[] pdf = new ReportExporter().ToPdf(SampleWithSemantics());
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(pdf, 0, 4));
+    }
+
+    private static ClosedXML.Excel.IXLCell Find(ClosedXML.Excel.IXLWorksheet ws, string value) =>
+        ws.CellsUsed().First(c => c.GetString() == value);
+
     [Theory]
     [InlineData(ReportChartKind.Pie)]
     [InlineData(ReportChartKind.Column)]

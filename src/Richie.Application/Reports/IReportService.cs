@@ -3,7 +3,17 @@ namespace Richie.Application.Reports;
 public enum ReportType { Assets, Expenses, Vault, FullPortfolio, Insurance }
 
 /// <summary>A simple table for a report section.</summary>
-public sealed record ReportTable(IReadOnlyList<string> Columns, IReadOnlyList<IReadOnlyList<string>> Rows);
+/// <param name="SignedColumns">Column indices whose cells hold a signed money/percent value and should be
+/// coloured green when positive / red when negative (PDF + Excel only; CSV/PPTX have no colour).</param>
+/// <param name="LinkColumns">Column indices whose cells should render as a hyperlink to the row's
+/// <see cref="RowLinks"/> URL (PDF + Excel only).</param>
+/// <param name="RowLinks">One URL per row (null where absent) used by <see cref="LinkColumns"/>.</param>
+public sealed record ReportTable(
+    IReadOnlyList<string> Columns,
+    IReadOnlyList<IReadOnlyList<string>> Rows,
+    IReadOnlyList<int>? SignedColumns = null,
+    IReadOnlyList<int>? LinkColumns = null,
+    IReadOnlyList<string?>? RowLinks = null);
 
 public enum ReportChartKind { Pie, Column }
 

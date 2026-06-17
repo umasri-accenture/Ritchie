@@ -56,7 +56,7 @@
                     </Grid>
                 </ui:Card>
 
-                <ui:TextBlock FontTypography="BodyStrong" Text="Monthly spending (last 12 months)" Margin="0,0,0,8" />
+<ui:TextBlock FontTypography="BodyStrong" Text="Monthly spending (last 12 months)" Margin="0,0,0,8" />
                 <ui:Card Margin="0,0,0,16">
                     <lvc:CartesianChart Height="220" Series="{Binding MonthlySeries}" XAxes="{Binding MonthlyAxes}" />
                 </ui:Card>

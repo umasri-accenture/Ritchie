@@ -45,4 +45,5 @@
     <SolidColorBrush x:Key="DarkWarningBrush" Color="{StaticResource DarkWarning}" />
     <SolidColorBrush x:Key="DarkDangerBrush" Color="{StaticResource DarkDanger}" />
 
+
 </ResourceDictionary>

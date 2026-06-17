@@ -94,7 +94,7 @@ public partial class AssetDetailsViewModel : ObservableObject
 
     partial void OnIsExcludedChanged(bool value)
     {
-        if (_loading || !IsJewellery)
+        if (_loading)
             return;
         _assets.SetPortfolioExclusion(_assetId, value);
     }

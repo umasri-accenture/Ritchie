@@ -5,7 +5,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       mc:Ignorable="d"
-      Title="Log in">
+      Title="Log in"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}">
     <Grid>
         <StackPanel Width="360" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ui:TextBlock FontTypography="TitleLarge" HorizontalAlignment="Center" Text="Welcome back" />

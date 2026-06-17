@@ -1,9 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Richie.Application.Assets;
 using Richie.UI.ViewModels;
 using Richie.UI.Views.Assets;
+
 
 namespace Richie.UI.Views.Pages;
 
@@ -17,6 +19,21 @@ public partial class AssetDocumentationPage : Page
     }
 
     private AssetDocumentationViewModel Vm => (AssetDocumentationViewModel)DataContext;
+
+    private void OnDataGridCellPreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        // Ensure controls inside template columns (e.g., CheckBox) respond on single click.
+        // WPF may run DataGrid selection logic before template controls; prevent that.
+        if (e.OriginalSource is FrameworkElement fe)
+        {
+            if (fe is CheckBox || fe is Button)
+            {
+                e.Handled = true;
+            }
+        }
+    }
+
+
 
     private void OnAddAsset(object sender, RoutedEventArgs e) => OpenEditor(null);
 

@@ -9,13 +9,20 @@
       ScrollViewer.CanContentScroll="False"
       Loaded="OnLoaded">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
-            <StackPanel MaxWidth="640" HorizontalAlignment="Left">
-                <ui:TextBlock FontTypography="TitleLarge" Text="Profile" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,12" />
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24" HorizontalScrollBarVisibility="Disabled">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <ui:Card Margin="0,0,0,12">
-                    <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Account" Margin="0,0,0,8" />
+                <!-- Right-side expansion: leave dashboard + left pane untouched; consume full remaining content width here. -->
+                <StackPanel Grid.Column="1" MaxWidth="1200" HorizontalAlignment="Stretch">
+                    <ui:TextBlock FontTypography="TitleLarge" Text="Profile" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,12" />
+
+                    <ui:Card Margin="0,0,0,12">
+                        <StackPanel>
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Account" Margin="0,0,0,8" />
                         <ui:TextBlock Appearance="Secondary" Text="Username (cannot change)" FontTypography="Caption" />
                         <ui:TextBlock Margin="0,0,0,8" Text="{Binding Username}" />
                         <ui:TextBox PlaceholderText="Full name" Margin="0,0,0,8"
@@ -82,6 +89,7 @@
                     </StackPanel>
                 </ui:Card>
             </StackPanel>
+        </Grid>
         </ScrollViewer>
     </Grid>
 </Page>

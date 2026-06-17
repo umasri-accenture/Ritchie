@@ -15,10 +15,11 @@ public sealed partial class ReportExporter
     private const int ChartHeight = 540;
     private static readonly SKColor LabelColor = new(0x32, 0x32, 0x32);
 
-    // Shared brand palette so report charts match the on-screen ones; explicit so slices/bars are
-    // visible without relying on a configured LiveCharts theme.
+    // Report-chart palette deliberately excludes green and red so those stay reserved for the
+    // profit/loss colouring elsewhere in the report. Explicit so slices/bars are visible without a
+    // configured LiveCharts theme.
     private static readonly SKColor[] Palette =
-        BrandColors.Categorical.Select(SKColor.Parse).ToArray();
+        BrandColors.ReportChartPalette.Select(SKColor.Parse).ToArray();
 
     /// <summary>Renders a report chart spec to a PNG image using SkiaSharp in-memory charts (no WPF).</summary>
     public static byte[] RenderChartImage(ReportChart chart)

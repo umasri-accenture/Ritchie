@@ -69,6 +69,32 @@ public sealed class ReportServiceTests : IDisposable
     }
 
     [Fact]
+    public void AssetsReport_MoneyHasRupeePrefix_AndSummaryMarksSignedColumns()
+    {
+        ReportContent report = _sut.Build(new ReportRequest(ReportType.Assets, null, null, false));
+
+        ReportSection summary = report.Sections.Single(s => s.Heading == "Portfolio summary");
+        Assert.Equal([2, 3], summary.Table!.SignedColumns);
+        Assert.All(summary.Table.Rows.Single().Take(3), v => Assert.StartsWith("₹", v)); // money cells
+        Assert.EndsWith("%", summary.Table.Rows.Single()[3]);                              // return %
+
+        ReportSection holdings = report.Sections.Single(s => s.Heading == "Holdings");
+        Assert.Equal([4], holdings.Table!.SignedColumns);
+    }
+
+    [Fact]
+    public void VaultReport_HasWebsiteColumnAndPerRowLinks()
+    {
+        _vault.Create(new VaultEntryInput("GitHub", "Dev", "https://github.com", "me", "p@ss", null));
+
+        ReportSection vault = _sut.Build(new ReportRequest(ReportType.Vault, null, null, false)).Sections.Single();
+
+        Assert.Equal(["Account", "Category", "User ID", "Password", "Website"], vault.Table!.Columns);
+        Assert.Equal([0, 4], vault.Table.LinkColumns);
+        Assert.Contains("https://github.com", vault.Table.RowLinks!);
+    }
+
+    [Fact]
     public void FullReport_CombinesAllModules()
     {
         ReportContent report = _sut.Build(new ReportRequest(ReportType.FullPortfolio, null, null, false));

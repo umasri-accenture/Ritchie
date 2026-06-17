@@ -20,9 +20,6 @@ public partial class AuthWindow : FluentWindow
         _services = services;
         _navigation = navigation;
         _navigation.NavigateRequested = Navigate;
-        
-        // Force Light mode for auth window (login/signup pages)
-        ApplicationThemeManager.Apply(ApplicationTheme.Light);
     }
 
     /// <summary>Show signup on first run (no accounts yet), otherwise login.</summary>

@@ -23,6 +23,7 @@
                 <GradientStop Color="#FEF5E8" Offset="1" />
             </LinearGradientBrush>
 
+
             <!-- Warm Dark Mode Colors (not pure black, with orange undertones) -->
             <SolidColorBrush x:Key="DarkModeBackgroundBrush" Color="#2A2416" />
             <SolidColorBrush x:Key="DarkModeCardBrush" Color="#3A3228" />

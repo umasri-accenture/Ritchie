@@ -91,12 +91,12 @@ public sealed class AssetService : IAssetService
         return true;
     }
 
-    public bool SetPortfolioExclusion(Guid id, bool excluded)
+public bool SetPortfolioExclusion(Guid id, bool excluded)
     {
         Guid userId = UserId;
         using RichieDbContext db = _factory.Create();
         Asset? asset = db.Assets.FirstOrDefault(a => a.Id == id && a.UserId == userId);
-        if (asset is null || asset.Type != AssetType.GoldJewellery)
+        if (asset is null)
             return false;
 
         asset.IsExcludedFromPortfolio = excluded;
@@ -180,7 +180,7 @@ public sealed class AssetService : IAssetService
         a.ValuationDate = i.ValuationDate;
         a.InvestmentMode = i.InvestmentMode;
         a.Notes = i.Notes;
-        a.IsExcludedFromPortfolio = i.Type == AssetType.GoldJewellery && i.IsExcludedFromPortfolio;
+        a.IsExcludedFromPortfolio = i.IsExcludedFromPortfolio;
         a.Exchange = i.Exchange;
         a.IssuePrice = i.IssuePrice;
         a.MaturityDate = i.MaturityDate;

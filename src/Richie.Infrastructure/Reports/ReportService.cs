@@ -75,18 +75,25 @@ public sealed class ReportService : IReportService
         PortfolioSummary p = _assets.GetPortfolioSummary();
         IReadOnlyList<AssetSummary> assets = _assets.GetAssets();
 
-        yield return new ReportSection("Portfolio summary",
-        [
-            $"Total invested: {Money(p.TotalInvested)}",
-            $"Total current value: {Money(p.TotalCurrentValue)}",
-            $"Profit / Loss: {Money(p.TotalProfitLoss)} ({p.TotalProfitLossPercent:+0.0;-0.0;0.0}%)",
-        ],
-        new ReportTable(
-            ["Name", "Type", "Invested", "Current", "P&L"],
-            assets.Select(a => (IReadOnlyList<string>)
-            [
-                a.Name, a.TypeName, Money(a.InvestedAmount), Money(a.CurrentValue), Money(a.ProfitLoss)
-            ]).ToList()));
+        // Totals as a one-row table so the Profit/Loss amount and Return % can be colour-coded
+        // (the signed columns) just like the per-holding P&L below.
+        yield return new ReportSection("Portfolio summary", [],
+            new ReportTable(
+                ["Total invested", "Total current value", "Profit / Loss", "Return %"],
+                [[
+                    Money(p.TotalInvested), Money(p.TotalCurrentValue), Money(p.TotalProfitLoss),
+                    p.TotalProfitLossPercent.ToString("+0.0;-0.0;0.0", CultureInfo.CurrentCulture) + "%"
+                ]],
+                SignedColumns: [2, 3]));
+
+        yield return new ReportSection("Holdings", [],
+            new ReportTable(
+                ["Name", "Type", "Invested", "Current", "P&L"],
+                assets.Select(a => (IReadOnlyList<string>)
+                [
+                    a.Name, a.TypeName, Money(a.InvestedAmount), Money(a.CurrentValue), Money(a.ProfitLoss)
+                ]).ToList(),
+                SignedColumns: [4]));
 
         yield return new ReportSection("Allocation by type", [],
             new ReportTable(
@@ -157,14 +164,19 @@ public sealed class ReportService : IReportService
         var rows = entries.Select(e => (IReadOnlyList<string>)
         [
             e.AccountName, e.Category ?? "", e.LoginId ?? "",
-            unmasked ? _vault.RevealPassword(e.Id) ?? "" : Masked
+            unmasked ? _vault.RevealPassword(e.Id) ?? "" : Masked,
+            e.Url ?? ""
         ]).ToList();
+        // One link per row; the Account (0) and Website (4) cells both link to it.
+        var links = entries.Select(e => string.IsNullOrWhiteSpace(e.Url) ? null : e.Url).ToList();
 
         return new ReportSection("Vault accounts",
             unmasked
                 ? ["Passwords are shown UNMASKED — handle this export securely."]
                 : ["Passwords are masked."],
-            new ReportTable(["Account", "Category", "User ID", "Password"], rows));
+            new ReportTable(
+                ["Account", "Category", "User ID", "Password", "Website"], rows,
+                LinkColumns: [0, 4], RowLinks: links));
     }
 
     private IEnumerable<ReportSection> InsuranceSections()
@@ -191,5 +203,5 @@ public sealed class ReportService : IReportService
         _ => "Report"
     };
 
-    private static string Money(decimal value) => value.ToString("N2", CultureInfo.CurrentCulture);
+    private static string Money(decimal value) => "₹" + value.ToString("N2", CultureInfo.CurrentCulture);
 }

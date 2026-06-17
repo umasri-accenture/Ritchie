@@ -21,4 +21,7 @@ public interface IAppSettingsService
     bool IsNotificationEnabled(NotificationType type);
 
     void SetLastBackup(DateTime utc);
+
+    /// <summary>Reads the saved theme setting before authentication is established.</summary>
+    string GetStartupTheme();
 }

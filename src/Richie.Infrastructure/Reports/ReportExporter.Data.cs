@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using ClosedXML.Excel;
+using Richie.Application.Common;
 using Richie.Application.Reports;
 
 namespace Richie.Infrastructure.Reports;
@@ -46,10 +47,31 @@ public sealed partial class ReportExporter
                 }
                 row++;
 
-                foreach (IReadOnlyList<string> dataRow in table.Rows)
+                for (int dr = 0; dr < table.Rows.Count; dr++)
                 {
+                    IReadOnlyList<string> dataRow = table.Rows[dr];
+                    string? rowLink = table.RowLinks is { } links && dr < links.Count ? links[dr] : null;
+
                     for (int c = 0; c < dataRow.Count; c++)
-                        ws.Cell(row, c + 1).Value = dataRow[c];
+                    {
+                        IXLCell cell = ws.Cell(row, c + 1);
+                        cell.Value = dataRow[c];
+
+                        if (rowLink is { Length: > 0 } && table.LinkColumns?.Contains(c) == true
+                            && Uri.TryCreate(rowLink, UriKind.Absolute, out Uri? uri))
+                        {
+                            cell.SetHyperlink(new XLHyperlink(uri));
+                            cell.Style.Font.FontColor = XLColor.FromHtml("#3E86C6");
+                            cell.Style.Font.Underline = XLFontUnderlineValues.Single;
+                        }
+                        else if (table.SignedColumns?.Contains(c) == true)
+                        {
+                            int sign = SignOf(dataRow[c]);
+                            if (sign > 0) cell.Style.Font.FontColor = XLColor.FromHtml(BrandColors.ProfitGreen);
+                            else if (sign < 0) cell.Style.Font.FontColor = XLColor.FromHtml(BrandColors.LossRed);
+                            if (sign != 0) cell.Style.Font.Bold = true;
+                        }
+                    }
                     row++;
                 }
             }

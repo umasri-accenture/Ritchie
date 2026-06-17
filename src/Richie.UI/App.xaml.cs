@@ -146,11 +146,6 @@ public partial class App : System.Windows.Application
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
         base.OnStartup(e);
 
-        // Apply system theme + professional accent up-front. Applying the accent before any theme
-        // is set leaves WPF-UI Primary buttons (e.g. first-run "Set up Richie") rendering greyed/stuck,
-        // so detect system theme first; the user's saved theme is re-applied after login.
-        Richie.UI.ViewModels.SettingsViewModel.ApplyTheme("System");
-
         DispatcherUnhandledException += (_, args) =>
         {
             Log.Fatal(args.Exception, "Unhandled UI exception");
@@ -168,13 +163,26 @@ public partial class App : System.Windows.Application
             }
         }
 
+        // Initialize database and load startup theme preference up-front,
+        // so that even the Splash Window opens in the correct theme.
+        try
+        {
+            _host.Services.GetRequiredService<IDatabaseInitializer>().Initialize();
+            var settingsService = _host.Services.GetRequiredService<Richie.Application.Settings.IAppSettingsService>();
+            var theme = settingsService.GetStartupTheme();
+            Richie.UI.ViewModels.SettingsViewModel.ApplyTheme(theme);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Failed to initialize database or load settings theme on startup");
+            Richie.UI.ViewModels.SettingsViewModel.ApplyTheme("System");
+        }
+
         var splash = new SplashWindow();
         splash.Show();
 
         try
         {
-            // Migrate before the host starts so the SIP background service sees a ready database.
-            await Task.Run(() => _host.Services.GetRequiredService<IDatabaseInitializer>().Initialize());
             await _host.StartAsync();
             ShowAuth();
         }
@@ -203,6 +211,14 @@ public partial class App : System.Windows.Application
             window.Close();
         };
         navigation.Authenticated += onAuthenticated;
+
+        window.Closed += (sender, args) =>
+        {
+            if (_main == null)
+            {
+                Shutdown();
+            }
+        };
 
         bool firstRun = !_host.Services.GetRequiredService<IAuthService>().AnyUserExists();
         window.Show();
@@ -250,11 +266,22 @@ public partial class App : System.Windows.Application
         closing.Close();
     }
 
-    protected override async void OnExit(ExitEventArgs e)
+    protected override void OnExit(ExitEventArgs e)
     {
-        await _host.StopAsync();
-        _host.Dispose();
-        Log.CloseAndFlush();
-        base.OnExit(e);
+        try
+        {
+            using var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(3));
+            _host.StopAsync(cts.Token).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "Failed to stop host cleanly on exit");
+        }
+        finally
+        {
+            _host.Dispose();
+            Log.CloseAndFlush();
+            base.OnExit(e);
+        }
     }
 }

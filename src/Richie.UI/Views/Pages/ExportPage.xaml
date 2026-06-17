@@ -18,7 +18,7 @@
             <StackPanel>
                 <ui:TextBlock FontTypography="BodyStrong" Text="Quick export — Full Portfolio" />
                 <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,4,0,12"
-                              Text="Exports your full portfolio (assets, expenses, insurance and the vault with passwords MASKED). For specific report types, section selection, or unmasked passwords, use the Reports page." />
+                              Text="Exports your full portfolio (assets, expenses, insurance and the vault). You'll be asked whether to include decrypted vault passwords — if so, you'll enter your master password; otherwise passwords are masked. For specific report types or section selection, use the Reports page." />
                 <StackPanel Orientation="Horizontal">
                     <ui:Button Content="Export PDF" Appearance="Primary" Margin="0,0,8,0" Click="OnExportPdf" />
                     <ui:Button Content="Export PPTX" Margin="0,0,8,0" Click="OnExportPptx" />

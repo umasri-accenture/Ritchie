@@ -4,7 +4,9 @@ using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using Richie.Application.Reports;
+using Richie.Application.Vault;
 using Richie.UI.Services;
+using Richie.UI.Views.Vault;
 
 namespace Richie.UI.Views.Pages;
 
@@ -23,35 +25,67 @@ public partial class ExportPage : Page
     private void Export(string format)
     {
         var services = ((App)System.Windows.Application.Current).Services;
-        ReportContent content = services.GetRequiredService<IReportService>()
-            .Build(new ReportRequest(ReportType.FullPortfolio, null, null, IncludeUnmaskedPasswords: false));
+        var gate = services.GetRequiredService<IVaultGate>();
 
-        var exporter = services.GetRequiredService<IReportExporter>();
-        byte[] bytes = format switch
-        {
-            "pdf" => exporter.ToPdf(content),
-            "pptx" => exporter.ToPptx(content),
-            "xlsx" => exporter.ToXlsx(content),
-            "csv" => exporter.ToCsv(content),
-            _ => throw new ArgumentOutOfRangeException(nameof(format))
-        };
+        // Ask whether to include decrypted (unmasked) vault passwords. If yes, re-auth with the master
+        // password; otherwise export with passwords masked.
+        bool unmask = false;
+        bool weUnlocked = false;
 
-        var dialog = new SaveFileDialog
+        if (gate.IsConfigured() &&
+            MessageBox.Show(
+                "Include your vault passwords DECRYPTED (unmasked) in this export?\n\n" +
+                "Choose Yes to enter your master password and export the real passwords in plain text. " +
+                "Choose No to export with passwords masked.",
+                "Decrypt passwords?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
         {
-            FileName = $"richie-full-portfolio-{DateTime.Now:yyyyMMdd}.{format}",
-            Filter = format switch
+            bool wasUnlocked = gate.IsUnlocked;
+            var reauth = services.GetRequiredService<VaultReauthWindow>();
+            reauth.Owner = Window.GetWindow(this);
+            reauth.Configure("Enter your master password to include unmasked passwords.", unlockOnConfirm: true);
+            if (reauth.ShowDialog() != true)
+                return;
+            unmask = true;
+            weUnlocked = !wasUnlocked;   // unlocked just for this export → re-lock afterwards
+        }
+
+        try
+        {
+            ReportContent content = services.GetRequiredService<IReportService>()
+                .Build(new ReportRequest(ReportType.FullPortfolio, null, null, IncludeUnmaskedPasswords: unmask));
+
+            var exporter = services.GetRequiredService<IReportExporter>();
+            byte[] bytes = format switch
             {
-                "pdf" => "PDF document|*.pdf",
-                "pptx" => "PowerPoint|*.pptx",
-                "xlsx" => "Excel workbook|*.xlsx",
-                "csv" => "CSV file|*.csv",
-                _ => "All files|*.*"
+                "pdf" => exporter.ToPdf(content),
+                "pptx" => exporter.ToPptx(content),
+                "xlsx" => exporter.ToXlsx(content),
+                "csv" => exporter.ToCsv(content),
+                _ => throw new ArgumentOutOfRangeException(nameof(format))
+            };
+
+            var dialog = new SaveFileDialog
+            {
+                FileName = $"richie-full-portfolio-{DateTime.Now:yyyyMMdd}.{format}",
+                Filter = format switch
+                {
+                    "pdf" => "PDF document|*.pdf",
+                    "pptx" => "PowerPoint|*.pptx",
+                    "xlsx" => "Excel workbook|*.xlsx",
+                    "csv" => "CSV file|*.csv",
+                    _ => "All files|*.*"
+                }
+            };
+            if (dialog.ShowDialog(Window.GetWindow(this)) == true)
+            {
+                File.WriteAllBytes(dialog.FileName, bytes);
+                services.GetRequiredService<ToastService>().Success($"{format.ToUpperInvariant()} exported.");
             }
-        };
-        if (dialog.ShowDialog(Window.GetWindow(this)) == true)
+        }
+        finally
         {
-            File.WriteAllBytes(dialog.FileName, bytes);
-            services.GetRequiredService<ToastService>().Success($"{format.ToUpperInvariant()} exported.");
+            if (weUnlocked)
+                gate.Lock();
         }
     }
 }
