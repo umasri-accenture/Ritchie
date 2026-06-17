@@ -4,11 +4,11 @@ using System.Windows.Media;
 
 namespace Richie.UI.Converters;
 
-/// <summary>Colours a profit/loss value: green when ≥ 0, red when negative (app-wide status palette).</summary>
+/// <summary>Colours a profit/loss value: green when ≥ 0, light orange when negative (app-wide status palette).</summary>
 public sealed class ProfitLossBrushConverter : IValueConverter
 {
-    private static readonly Brush Green = Freeze(Color.FromRgb(0x0F, 0x7B, 0x0F));
-    private static readonly Brush Red = Freeze(Color.FromRgb(0xC4, 0x2B, 0x1C));
+    private static readonly Brush Green = Freeze(Color.FromRgb(0x57, 0xB8, 0x94));
+    private static readonly Brush Orange = Freeze(Color.FromRgb(0xFF, 0xB3, 0x66));
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -20,7 +20,7 @@ public sealed class ProfitLossBrushConverter : IValueConverter
             int i => i,
             _ => 0
         };
-        return n < 0 ? Red : Green;
+        return n < 0 ? Orange : Green;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>

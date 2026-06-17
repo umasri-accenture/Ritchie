@@ -5,11 +5,11 @@ using System.Windows.Media;
 
 namespace Richie.UI.Converters;
 
-/// <summary>Colours a profit/loss value specifically for the Asset Documentation page: teal when ≥ 0, orange when negative.</summary>
+/// <summary>Colours a profit/loss value for the Asset page: green when ≥ 0, light orange when negative (consistent app-wide palette).</summary>
 public sealed class AssetPageProfitLossBrushConverter : IValueConverter
 {
-    private static readonly Brush Teal = Freeze(Color.FromRgb(0x0F, 0x76, 0x6E));
-    private static readonly Brush Orange = Freeze(Color.FromRgb(0xEA, 0x58, 0x0C));
+    private static readonly Brush Green = Freeze(Color.FromRgb(0x57, 0xB8, 0x94));
+    private static readonly Brush Orange = Freeze(Color.FromRgb(0xFF, 0xB3, 0x66));
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -21,7 +21,7 @@ public sealed class AssetPageProfitLossBrushConverter : IValueConverter
             int i => i,
             _ => 0
         };
-        return n < 0 ? Orange : Teal;
+        return n < 0 ? Orange : Green;
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>

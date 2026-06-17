@@ -38,63 +38,132 @@
             </ui:Card>
 
             <!-- Summary cards -->
-            <UniformGrid Rows="1" Margin="0,0,0,12">
-                <ui:Card Margin="0,0,8,0">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="Wallet24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
-                                       Foreground="{StaticResource BrandPrimaryBrush}" />
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Total assets" />
-                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis" Text="{Binding TotalAssetsText}" />
-                        </StackPanel>
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card Margin="0,0,8,0">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="Savings24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
-                                       Foreground="{StaticResource BrandPrimaryBrush}" />
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Total invested" />
-                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis" Text="{Binding TotalInvestedText}" />
-                        </StackPanel>
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card Margin="0,0,8,0">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="ReceiptMoney24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
-                                       Foreground="{StaticResource BrandPrimaryBrush}" />
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Expenses (this month)" />
-                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis" Text="{Binding TotalExpensesText}" />
-                        </StackPanel>
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card Margin="0,0,8,0">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="DataTrending24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
-                                       Foreground="{Binding ProfitLossBrush}" />
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Profit &amp; loss" />
-                            <ui:TextBlock FontTypography="Subtitle" TextTrimming="CharacterEllipsis"
-                                          Foreground="{Binding ProfitLossBrush}" Text="{Binding ProfitLossText}" />
-                        </StackPanel>
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card>
-                    <StackPanel Orientation="Horizontal">
-                        <ui:SymbolIcon Symbol="HeartPulse24" FontSize="22" VerticalAlignment="Top" Margin="0,2,10,0"
-                                       Foreground="{Binding HealthBrush}" />
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Financial health" />
-                            <StackPanel Orientation="Horizontal">
-                                <ui:TextBlock FontTypography="Title" Foreground="{Binding HealthBrush}" Text="{Binding HealthScore}" />
-                                <ui:TextBlock Appearance="Secondary" VerticalAlignment="Bottom" Margin="3,0,0,3" Text="/100" />
-                            </StackPanel>
-                            <ui:TextBlock Foreground="{Binding HealthBrush}" Text="{Binding HealthRating}" />
-                        </StackPanel>
-                    </StackPanel>
-                </ui:Card>
-            </UniformGrid>
+            <Grid Margin="0,0,0,12" Height="130">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- Total Assets -->
+<ui:Card Grid.Column="0" Padding="12" Height="100">
+    <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,8">
+            <ui:SymbolIcon Symbol="Wallet24"
+                           FontSize="16"
+                           Foreground="{StaticResource BrandPrimaryBrush}"
+                           Margin="0,0,6,0"/>
+            <ui:TextBlock Appearance="Secondary"
+                          FontTypography="Caption"
+                          VerticalAlignment="Center"
+                          Text="Total assets"/>
+        </StackPanel>
+
+        <ui:TextBlock FontTypography="Subtitle"
+                      Text="{Binding TotalAssetsText}"
+                      HorizontalAlignment="Center"/>
+    </StackPanel>
+</ui:Card>
+
+<!-- Total Invested -->
+<ui:Card Grid.Column="2" Padding="12" Height="100">
+    <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,8">
+            <ui:SymbolIcon Symbol="Savings24"
+                           FontSize="16"
+                           Foreground="{StaticResource BrandPrimaryBrush}"
+                           Margin="0,0,6,0"/>
+            <ui:TextBlock Appearance="Secondary"
+                          FontTypography="Caption"
+                          VerticalAlignment="Center"
+                          Text="Total invested"/>
+        </StackPanel>
+
+        <ui:TextBlock FontTypography="Subtitle"
+                      Text="{Binding TotalInvestedText}"
+                      HorizontalAlignment="Center"/>
+    </StackPanel>
+</ui:Card>
+
+<!-- Expenses -->
+<ui:Card Grid.Column="4" Padding="12" Height="100">
+    <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,8">
+            <ui:SymbolIcon Symbol="ReceiptMoney24"
+                           FontSize="16"
+                           Foreground="{StaticResource BrandPrimaryBrush}"
+                           Margin="0,0,6,0"/>
+            <ui:TextBlock Appearance="Secondary"
+                          FontTypography="Caption"
+                          VerticalAlignment="Center"
+                          Text="Expenses (this month)"/>
+        </StackPanel>
+
+        <ui:TextBlock FontTypography="Subtitle"
+                      Text="{Binding TotalExpensesText}"
+                      HorizontalAlignment="Center"/>
+    </StackPanel>
+</ui:Card>
+
+<!-- Profit & Loss -->
+<ui:Card Grid.Column="6" Padding="12" Height="100">
+    <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,8">
+            <ui:SymbolIcon Symbol="DataTrending24"
+                           FontSize="16"
+                           Foreground="{Binding ProfitLossBrush}"
+                           Margin="0,0,6,0"/>
+            <ui:TextBlock Appearance="Secondary"
+                          FontTypography="Caption"
+                          VerticalAlignment="Center"
+                          Text="Profit &amp; loss"/>
+        </StackPanel>
+
+        <ui:TextBlock FontTypography="Subtitle"
+                      Foreground="{Binding ProfitLossBrush}"
+                      Text="{Binding ProfitLossText}"
+                      HorizontalAlignment="Center"/>
+    </StackPanel>
+</ui:Card>
+
+<!-- Financial Health -->
+<ui:Card Grid.Column="8" Padding="12" Height="100">
+    <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,8">
+            <ui:SymbolIcon Symbol="HeartPulse24"
+                           FontSize="16"
+                           Foreground="{Binding HealthBrush}"
+                           Margin="0,0,6,0"/>
+            <ui:TextBlock Appearance="Secondary"
+                          FontTypography="Caption"
+                          VerticalAlignment="Center"
+                          Text="Financial health"/>
+        </StackPanel>
+
+        <ui:TextBlock FontTypography="Subtitle"
+                      Foreground="{Binding HealthBrush}"
+                      Text="{Binding HealthScoreText}"
+                      HorizontalAlignment="Center"/>
+
+        
+    </StackPanel>
+</ui:Card>
+            </Grid>
 
             <!-- Quick actions -->
             <WrapPanel Margin="0,0,0,12">
@@ -147,7 +216,9 @@
                         <ui:TextBlock FontTypography="BodyStrong" Text="Income vs Expense" />
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="Last 9 months" Margin="0,0,0,8" />
                         <lvc:CartesianChart Height="220" Series="{Binding IncomeExpenseSeries}"
-                                            XAxes="{Binding IncomeExpenseAxes}" LegendPosition="Bottom" />
+                                            XAxes="{Binding IncomeExpenseAxes}"
+                                            YAxes="{Binding IncomeExpenseYAxes}"
+                                            LegendPosition="Bottom" />
                     </StackPanel>
                 </ui:Card>
             </Grid>
@@ -177,6 +248,7 @@
                         </Grid>
                         <lvc:CartesianChart Height="210" Margin="0,8,0,0" Series="{Binding InvestmentSeries}"
                                             XAxes="{Binding InvestmentAxes}"
+                                            YAxes="{Binding InvestmentYAxes}"
                                             Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0" Text="Add assets to track investment growth."
                                       Visibility="{Binding NoAssets, Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -187,8 +259,24 @@
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong" Text="Expense breakdown" />
                         <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="This month" Margin="0,0,0,8" />
-                        <lvc:CartesianChart Height="220" Series="{Binding ExpenseBreakdownSeries}"
-                                            XAxes="{Binding ExpenseBreakdownAxes}" />
+                       <lvc:CartesianChart Height="220" Series="{Binding ExpenseBreakdownSeries}"
+                                            YAxes="{Binding ExpenseBreakdownAxes}"
+                                            XAxes="{Binding ExpenseBreakdownYAxes}" />
+                        <ItemsControl ItemsSource="{Binding ExpenseBreakdownLegend}" Margin="0,8,0,0">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                        <Border Width="12" Height="12" Background="{Binding Swatch}" CornerRadius="2" Margin="0,0,6,0" />
+                                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Text="{Binding Label}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </ui:Card>
             </Grid>
