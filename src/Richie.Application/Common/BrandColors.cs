@@ -52,6 +52,6 @@ public static class BrandColors
         "#109787", // Teal
         "#B5651D", // Sienna
         "#8E7CC3", // Lavender
-        "#5F8B4C"  // Olive
+        "#bcca25"  // Olive
     ];
 }
