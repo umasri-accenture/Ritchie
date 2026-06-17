@@ -9,31 +9,95 @@
       Title="Financial Health Audit"
       ScrollViewer.CanContentScroll="False"
       Loaded="OnLoaded">
+
     <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <!-- Global spacing & typography helpers (visual-only) -->
+        <Thickness x:Key="CardPadding">12,12,12,12</Thickness>
+
+        <!-- DataGrid styling (visual-only) -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F1F5F9" />
+            <Setter Property="Foreground" Value="#475569" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="#E2E8F0" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="0"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#E0F2FE" />
+                    <Setter Property="Foreground" Value="#0F172A" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Height" Value="36" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="#E2E8F0" />
+        </Style>
     </Page.Resources>
-    <Grid Margin="24">
+
+    <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,0,0,12">
+        <!-- Title row -->
+        <Grid Grid.Row="0" Margin="0,0,0,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ui:TextBlock Grid.Column="0" FontTypography="TitleLarge" Text="Financial Health Audit"
-                          Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
-            <ui:Button Grid.Column="1" HorizontalAlignment="Right" Content="Manage insurance" Click="OnManageInsurance" />
+
+            <ui:TextBlock Grid.Column="0"
+                          FontTypography="TitleLarge"
+                          Text="Financial Health Audit"
+                          Foreground="#0F172A"
+                          VerticalAlignment="Center"
+                          TextTrimming="CharacterEllipsis" />
+
+            <ui:Button Grid.Column="1"
+                       Margin="0,0,0,0"
+                       HorizontalAlignment="Right"
+                       Content="Manage insurance"
+                       Click="OnManageInsurance" />
         </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <ui:InfoBar Severity="Warning" IsOpen="{Binding ScoresAreInterim}" IsClosable="False"
-                            Margin="0,0,0,12" Title="Interim scoring" Message="{Binding InterimNotice}" />
+            <StackPanel Margin="0,0,0,0">
+                <!-- Interim scoring banner: keep yellow/amber background; ensure icon/text uses dark amber -->
+                <ui:InfoBar Severity="Warning"
+                            IsOpen="{Binding ScoresAreInterim}"
+                            IsClosable="False"
+                            Margin="0,0,0,10"
+                            Title="Interim scoring"
+                            Message="{Binding InterimNotice}" />
 
-                <!-- Scores -->
+                <!-- SECTION 1: Scores (equal cards) -->
                 <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -41,72 +105,178 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ui:Card Grid.Column="0">
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Portfolio Health Score" />
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:TextBlock FontTypography="Display" Foreground="{Binding HealthBrush}" Text="{Binding HealthScore}" />
-                                <ui:TextBlock Appearance="Secondary" VerticalAlignment="Bottom" Margin="4,0,0,8" Text="/ 100" />
-                            </StackPanel>
-                            <ui:TextBlock FontTypography="Subtitle" Foreground="{Binding HealthBrush}" Text="{Binding HealthRating}" />
-                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
-                                          Margin="0,4,0,8" Text="{Binding HealthScaleLegend}" />
-                            <ItemsControl ItemsSource="{Binding HealthFactors}">
+                    <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                            <ui:TextBlock Grid.Row="0" FontTypography="BodyStrong" Text="Portfolio Health Score" />
+
+                                <Grid Grid.Row="1" Margin="0,6,0,0" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Single prominent score number (no duplicate overlay) -->
+                                    <Border Width="64" Height="64" CornerRadius="32" Background="#FFF7ED" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <ui:TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                      FontTypography="Display" Foreground="{Binding HealthBrush}"
+                                                      Text="{Binding HealthScore}" />
+                                    </Border>
+                                </Grid>
+
+                                <ui:TextBlock Grid.Row="2" FontTypography="Subtitle" Foreground="{Binding HealthBrush}" Text="{Binding HealthRating}" Margin="0,6,0,0" />
+
+                                <!-- Scale reference -->
+                                <ui:TextBlock Grid.Row="3" Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
+                                              Margin="0,6,0,0" Text="{Binding HealthScaleLegend}" />
+
+                                <!-- Breakdown items compact list -->
+                                <ItemsControl Grid.Row="4" ItemsSource="{Binding HealthFactors}" Margin="0,8,0,0">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Margin="0,2">
-                                            <ui:TextBlock FontTypography="BodyStrong"
-                                                          Text="{Binding Name}" />
-                                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
-                                                          Text="{Binding Explanation}" />
+                                        <StackPanel Margin="0,0,0,6">
+                                            <ui:TextBlock FontTypography="BodyStrong" Text="{Binding Name}" />
+                                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Text="{Binding Explanation}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                        </StackPanel>
+                        </Grid>
                     </ui:Card>
 
-                    <ui:Card Grid.Column="2">
-                        <StackPanel>
-                            <ui:TextBlock Appearance="Secondary" Text="Risk Score (Riskometer)" />
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <ui:TextBlock FontTypography="Display" Foreground="{Binding RiskBrush}" Text="{Binding RiskScore}" />
-                                <ui:TextBlock Appearance="Secondary" VerticalAlignment="Bottom" Margin="4,0,0,8" Text="/ 100" />
+                            <ui:Card Grid.Column="2" Padding="12" VerticalAlignment="Stretch">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <ui:TextBlock Grid.Row="0" FontTypography="BodyStrong" Text="Risk Score (Riskometer)" />
+
+                            <Grid Grid.Row="1" Margin="0,8,0,0" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Width="64" Height="64" CornerRadius="32" Background="#FFF7ED" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <ui:TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  FontTypography="Display" Foreground="{Binding RiskBrush}" Text="{Binding RiskScore}" />
+                                </Border>
+
+                                <Grid Grid.Row="1" Grid.ColumnSpan="2" Height="0" />
+                            </Grid>
+
+                            <ui:TextBlock Grid.Row="2" FontTypography="Subtitle" Foreground="{Binding RiskBrush}" Text="{Binding RiskBand}" Margin="0,6,0,0" />
+
+                            <StackPanel Grid.Row="3" Margin="0,8,0,0">
+                                <ProgressBar Height="8"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Value="{Binding RiskScore}"
+                                             Foreground="{Binding RiskBrush}" />
+                                <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,8,0,0" Text="{Binding RiskInterpretation}" />
+                                <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Margin="0,8,0,0" Text="{Binding RiskScaleLegend}" />
                             </StackPanel>
-                            <ui:TextBlock FontTypography="Subtitle" Foreground="{Binding RiskBrush}" Text="{Binding RiskBand}" />
-                            <ProgressBar Height="6" Minimum="0" Maximum="100" Value="{Binding RiskScore}"
-                                         Foreground="{Binding RiskBrush}" Margin="0,8,0,0" />
-                            <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,8,0,0" Text="{Binding RiskInterpretation}" />
-                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
-                                          Margin="0,8,0,0" Text="{Binding RiskScaleLegend}" />
+                        </Grid>
+                    </ui:Card>
+                </Grid>
+
+                <!-- SECTION 2: Radar + Benchmark chart cards (equal, 2-column) -->
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch"
+                             Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ui:TextBlock Grid.Row="0" FontTypography="BodyStrong" Text="Health dimensions" />
+                            <ui:TextBlock Grid.Row="1" Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap"
+                                          Margin="0,6,0,6"
+                                          Text="Each health-score factor on a 0–100 scale — a larger, more even shape is healthier." />
+
+                            <Grid Grid.Row="2" Margin="0,12,0,4" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                <!-- Taller chart to reduce empty whitespace and prevent overlapping axis labels -->
+                                <Grid Width="320" Height="320">
+                                    <lvc:PolarChart
+                                        Series="{Binding HealthRadarSeries}"
+                                        AngleAxes="{Binding HealthRadarAngleAxes}"
+                                        RadiusAxes="{Binding HealthRadarRadiusAxes}" />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </ui:Card>
+
+                    <ui:Card Grid.Column="2" Padding="12" VerticalAlignment="Stretch">
+                        <StackPanel>
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Benchmark Comparison" />
+                            <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Margin="0,6,0,10"
+                                          Text="Your allocation vs recommended range for your age group." />
+
+                            <!-- Benchmark comparison bar chart (UI-only visualization).
+                                 Pulls allocation + recommended percentages from the existing Benchmark collection rows. -->
+                            <Border Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                                <Grid Margin="8" Height="300">
+                                    <lvc:CartesianChart Series="{Binding BenchmarkComparisonSeries}" />
+                                </Grid>
+                            </Border>
+
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0">
+                                    <Ellipse Width="10" Height="10" Fill="#2563EB" VerticalAlignment="Center" />
+                                    <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Margin="6,0,0,0" Text="Your Allocation %" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Ellipse Width="10" Height="10" Fill="#94A3B8" VerticalAlignment="Center" />
+                                    <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Margin="6,0,0,0" Text="Recommended %" />
+                                </StackPanel>
+                            </Grid>
                         </StackPanel>
                     </ui:Card>
                 </Grid>
 
-                <!-- Health dimensions radar -->
-                <ui:Card Margin="0,0,0,12"
-                         Visibility="{Binding HasAssets, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Health dimensions" />
-                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" TextWrapping="Wrap" Margin="0,0,0,8"
-                                      Text="Each health-score factor on a 0–100 scale — a larger, more even shape is healthier." />
-                        <lvc:PolarChart Height="320"
-                                        Series="{Binding HealthRadarSeries}"
-                                        AngleAxes="{Binding HealthRadarAngleAxes}"
-                                        RadiusAxes="{Binding HealthRadarRadiusAxes}" />
-                    </StackPanel>
-                </ui:Card>
-
-                <!-- Benchmark comparison -->
-                <ui:Card Margin="0,0,0,12">
+                <!-- SECTION 3: Benchmark table + bottom 4 cards row -->
+                <ui:Card Margin="0,0,0,12" Padding="12">
                     <StackPanel>
                         <ui:TextBlock FontTypography="BodyStrong"
                                       Text="{Binding AgeBandName, StringFormat='Benchmark comparison — {0}'}" />
-                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Margin="0,2,0,8"
+                        <ui:TextBlock Appearance="Secondary" FontTypography="Caption" Margin="0,4,0,8"
                                       Text="Your allocation vs the recommended range for your age group." />
-                        <DataGrid ItemsSource="{Binding Benchmark}" AutoGenerateColumns="False" IsReadOnly="True"
-                                  CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
-                                  Background="Transparent">
+
+                        <DataGrid ItemsSource="{Binding Benchmark}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="Horizontal"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Asset class" Binding="{Binding ClassName}" Width="*" />
                                 <DataGridTextColumn Header="Your allocation" Binding="{Binding ActualText}" Width="Auto" />
@@ -114,115 +284,158 @@
                                 <DataGridTemplateColumn Header="Status" Width="Auto">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" />
+                                            <ui:TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontTypography="BodyStrong" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
+
                         <ui:TextBlock Appearance="Secondary" Margin="0,8,0,0" TextWrapping="Wrap" Text="{Binding DiversificationText}" />
                     </StackPanel>
                 </ui:Card>
 
-                <!-- Goals + coverage -->
+                <!-- Bottom cards: Goal, Protection, Guaranteed Investments, Compliance -->
                 <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="12" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ui:Card Grid.Column="0">
+                    <ui:Card Grid.Column="0" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel>
-                            <ui:TextBlock FontTypography="BodyStrong" Text="Goal progress" Margin="0,0,0,6" />
-                            <ItemsControl ItemsSource="{Binding Goals}"
-                                          Visibility="{Binding HasGoals, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Goal Progress" Margin="0,0,0,8" />
+                            <ItemsControl ItemsSource="{Binding Goals}" Visibility="{Binding HasGoals, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Margin="0,3">
+                                        <Grid Margin="0,4,0,0">
                                             <ui:TextBlock Text="{Binding Name}" />
-                                            <ui:TextBlock HorizontalAlignment="Right" Appearance="Secondary"
-                                                          Text="{Binding PercentComplete, StringFormat={}{0:0.#}%}" />
+                                            <ui:TextBlock HorizontalAlignment="Right" Appearance="Secondary" Text="{Binding PercentComplete, StringFormat={}{0:0.#}%}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <ui:TextBlock Appearance="Secondary" Text="No goals set yet."
-                                          Visibility="{Binding NoGoals, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <ui:TextBlock Appearance="Secondary" Text="No goals set yet." Visibility="{Binding NoGoals, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,8,0,0" />
                         </StackPanel>
                     </ui:Card>
 
-                    <ui:Card Grid.Column="2">
+                    <ui:Card Grid.Column="2" Padding="12" VerticalAlignment="Stretch">
                         <StackPanel>
-                            <ui:TextBlock FontTypography="BodyStrong" Text="Protection coverage" Margin="0,0,0,6" />
-                            <ItemsControl ItemsSource="{Binding CoverageGaps}"
-                                          Visibility="{Binding HasCoverageGaps, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Protection Coverage" Margin="0,0,0,8" />
+                            <ItemsControl ItemsSource="{Binding CoverageGaps}" Visibility="{Binding HasCoverageGaps, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,2" Text="{Binding}" />
+                                        <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,4,0,0" Text="{Binding}" />
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <ui:TextBlock Appearance="Secondary" Text="Health and term-life cover are in place."
-                                          Visibility="{Binding CoverageOk, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <ui:TextBlock Appearance="Secondary" Text="Health and term-life cover are in place." Visibility="{Binding CoverageOk, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,8,0,0" />
+                        </StackPanel>
+                    </ui:Card>
+
+                    <ui:Card Grid.Column="4" Padding="12" VerticalAlignment="Stretch" >
+                        <StackPanel>
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Guaranteed Investments" Margin="0,0,0,8"
+                                          Visibility="{Binding HasGips, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                            <DataGrid ItemsSource="{Binding Gips}"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      CanUserAddRows="False"
+                                      HeadersVisibility="Column"
+                                      GridLinesVisibility="Horizontal"
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      Visibility="{Binding HasGips, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Plan" Binding="{Binding Name}" Width="*" />
+                                    <DataGridTextColumn Header="Guaranteed %" Binding="{Binding GuaranteedReturnPercent}" Width="Auto" />
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="Auto" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <ui:TextBlock Appearance="Secondary" Text="No guaranteed investments configured." Visibility="{Binding HasGips, Converter={StaticResource BoolToVisibilityConverter}}" Margin="0,8,0,0" />
+
+                        </StackPanel>
+                    </ui:Card>
+
+                    <ui:Card Grid.Column="6" Padding="12" VerticalAlignment="Stretch">
+                        <StackPanel>
+                            <ui:TextBlock FontTypography="BodyStrong" Text="Compliance Summary" Margin="0,0,0,8" />
+
+                            <!-- Compliance header badge -->
+                            <Border Padding="8,6" CornerRadius="8" Background="#EA580C" HorizontalAlignment="Stretch">
+                                <ui:TextBlock FontTypography="BodyStrong" Foreground="White" Text="{Binding ComplianceOverall}" TextWrapping="Wrap" />
+                            </Border>
+
+                            <!-- Compliance items list (compact, no overflow) -->
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding Compliance}" Margin="0,10,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,4,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid Grid.Column="0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="150" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <ui:TextBlock Grid.Column="0" Text="{Binding Name}" TextWrapping="Wrap" />
+                                                    <ui:TextBlock Grid.Column="1" Appearance="Secondary" TextWrapping="Wrap" Text="{Binding Detail}" Margin="10,0,0,0" />
+                                                </Grid>
+
+                                                <Border Grid.Column="1" Padding="4,2" CornerRadius="6" Background="{Binding StatusBrush}" VerticalAlignment="Top">
+                                                    <ui:TextBlock FontTypography="Caption" Foreground="White" Text="{Binding StatusText}" TextWrapping="Wrap" />
+                                                </Border>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </StackPanel>
                     </ui:Card>
                 </Grid>
 
-                <!-- Compliance (§9.2) -->
-                <ui:Card Margin="0,0,0,12">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,6">
-                            <ui:TextBlock FontTypography="BodyStrong" Text="Compliance" VerticalAlignment="Center" />
-                            <ui:TextBlock HorizontalAlignment="Right" FontTypography="BodyStrong"
-                                          Foreground="{Binding ComplianceBrush}" Text="{Binding ComplianceOverall}" />
-                        </Grid>
-                        <ItemsControl ItemsSource="{Binding Compliance}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,3">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="180" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <ui:TextBlock Grid.Column="0" Text="{Binding Name}" />
-                                        <ui:TextBlock Grid.Column="1" Appearance="Secondary" TextWrapping="Wrap" Text="{Binding Detail}" />
-                                        <TextBlock Grid.Column="2" Margin="8,0,0,0" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                <!-- SECTION 5: Insights -->
+                <ui:Card Padding="12" Margin="0,0,0,8">
+                    <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                                <ui:TextBlock FontTypography="BodyStrong" Text="Insights" />
+                                <ui:TextBlock Margin="10,0,0,0" FontTypography="Subtitle" Text="💡" />
+                            </StackPanel>
 
-                        <ui:TextBlock FontTypography="BodyStrong" Margin="0,10,0,4" Text="Guaranteed investments"
-                                      Visibility="{Binding HasGips, Converter={StaticResource BoolToVisibilityConverter}}" />
-                        <DataGrid ItemsSource="{Binding Gips}" AutoGenerateColumns="False" IsReadOnly="True"
-                                  CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
-                                  Background="Transparent"
-                                  Visibility="{Binding HasGips, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Plan" Binding="{Binding Name}" Width="*" />
-                                <DataGridTextColumn Header="Guaranteed %" Binding="{Binding GuaranteedReturnPercent}" Width="Auto" />
-                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="Auto" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
-                </ui:Card>
+                            <ItemsControl ItemsSource="{Binding Suggestions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="14" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
 
-                <!-- Insights (cross-module: portfolio + spending) -->
-                <ui:Card>
-                    <StackPanel>
-                        <ui:TextBlock FontTypography="BodyStrong" Text="Insights" Margin="0,0,0,6" />
-                        <ItemsControl ItemsSource="{Binding Suggestions}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ui:TextBlock Appearance="Secondary" TextWrapping="Wrap" Margin="0,2" Text="{Binding}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
+                                            <!-- Visual-only bullet -->
+                                            <Ellipse Grid.Column="0" Width="10" Height="10" Fill="#EA580C" VerticalAlignment="Center" />
+                                            <ui:TextBlock Grid.Column="1" Appearance="Secondary" TextWrapping="Wrap" Margin="10,0,0,0" Text="{Binding}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
                 </ui:Card>
             </StackPanel>
         </ScrollViewer>
     </Grid>
 </Page>
+
