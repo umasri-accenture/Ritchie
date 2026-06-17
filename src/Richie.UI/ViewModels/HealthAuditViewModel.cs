@@ -2,11 +2,13 @@ using System.Collections.ObjectModel;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
+using LiveChartsCore.Measure;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Richie.Application.Audit;
 using Richie.Domain.Audit;
 using Richie.UI.Charts;
+using SkiaSharp;
 
 namespace Richie.UI.ViewModels;
 
@@ -22,6 +24,7 @@ public partial class HealthAuditViewModel : ObservableObject
     public sealed record ComplianceDisplay(string Name, string StatusText, Brush StatusBrush, string Detail);
 
     [ObservableProperty] private bool _hasAssets;
+    [ObservableProperty] private bool _noAssets;
     [ObservableProperty] private bool _scoresAreInterim;
 
     [ObservableProperty] private int _healthScore;
@@ -33,9 +36,11 @@ public partial class HealthAuditViewModel : ObservableObject
     [ObservableProperty] private ISeries[] _healthRadarSeries = [];
     [ObservableProperty] private PolarAxis[] _healthRadarAngleAxes = [];
     [ObservableProperty] private PolarAxis[] _healthRadarRadiusAxes = [];
+    [ObservableProperty] private Margin? _healthRadarDrawMargin;
 
     // Benchmark comparison (kept non-null to avoid LiveCharts startup crashes).
     [ObservableProperty] private ISeries[] _benchmarkComparisonSeries = [];
+    [ObservableProperty] private Axis[] _benchmarkComparisonAxes = [];
 
     [ObservableProperty] private int _riskScore;
     [ObservableProperty] private string _riskBand = string.Empty;
@@ -58,6 +63,7 @@ public partial class HealthAuditViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<ComplianceDisplay> _compliance = [];
     [ObservableProperty] private ObservableCollection<GipStatusRow> _gips = [];
     [ObservableProperty] private bool _hasGips;
+    [ObservableProperty] private bool _noGips;
 
     public string HealthScaleLegend => "Scale: 80–100 Excellent · 60–79 Good · below 60 Needs attention.";
     public string RiskScaleLegend => "Scale: ≤20 Low · ≤40 Moderate · ≤60 Moderately High · ≤80 High · >80 Very High.";
@@ -82,12 +88,13 @@ public partial class HealthAuditViewModel : ObservableObject
         HealthAuditReport r = _audit.GetReport();
 
         HasAssets = r.HasAssets;
+        NoAssets = !HasAssets;
         ScoresAreInterim = r.ScoresAreInterim;
 
         HealthScore = r.HealthScore;
         HealthRating = r.HealthRating;
         // Portfolio Health Score: 43/100 (low) should render as Orange, and “Good” as Teal.
-        HealthBrush = r.HealthScore >= 80 ? Teal : r.HealthScore >= 60 ? Amber : Orange;
+        HealthBrush = r.HealthScore >= 60 ? Teal : Orange;
 
         HealthFactors = new ObservableCollection<ScoreFactor>(r.HealthFactors);
         BuildRadar(r.HealthFactors);
@@ -101,6 +108,7 @@ public partial class HealthAuditViewModel : ObservableObject
 
         AgeBandName = r.AgeBandName;
         Benchmark = new ObservableCollection<BenchmarkDisplay>(r.Benchmark.Select(ToDisplay));
+        BuildBenchmarkChart(r.Benchmark);
         DiversificationText = $"{r.DistinctClassCount} of 4 broad asset classes represented" +
             (r.MissingClasses.Count > 0 ? $" — missing: {string.Join(", ", r.MissingClasses)}." : ".");
 
@@ -122,6 +130,7 @@ public partial class HealthAuditViewModel : ObservableObject
         Compliance = new ObservableCollection<ComplianceDisplay>(c.Areas.Select(ToComplianceDisplay));
         Gips = new ObservableCollection<GipStatusRow>(c.Gips);
         HasGips = c.Gips.Count > 0;
+        NoGips = !HasGips;
     }
 
     private void BuildRadar(IReadOnlyList<ScoreFactor> factors)
@@ -140,8 +149,55 @@ public partial class HealthAuditViewModel : ObservableObject
                 GeometrySize = 8
             }
         ];
-        HealthRadarAngleAxes = [new PolarAxis { Labels = factors.Select(f => f.Name).ToArray() }];
-        HealthRadarRadiusAxes = [new PolarAxis { MinLimit = 0, MaxLimit = 100 }];
+        HealthRadarAngleAxes = [
+            new PolarAxis
+            {
+                Labels = factors.Select(f => f.Name switch
+                {
+                    "Benchmark alignment" => "Benchmark",
+                    "Goal progress" => "Goals",
+                    _ => f.Name
+                }).ToArray(),
+                TextSize = 10
+            }
+        ];
+        HealthRadarRadiusAxes = [
+            new PolarAxis
+            {
+                MinLimit = 0,
+                MaxLimit = 100,
+                TextSize = 8
+            }
+        ];
+        HealthRadarDrawMargin = new Margin(15);
+    }
+
+    private void BuildBenchmarkChart(IReadOnlyList<BenchmarkRow> benchmark)
+    {
+        BenchmarkComparisonSeries =
+        [
+            new ColumnSeries<double>
+            {
+                Name = "Recommended %",
+                Values = benchmark.Select(b => (double)b.RecommendedPercent).ToArray(),
+                Fill = new SolidColorPaint(SKColor.Parse("#94A3B8"))
+            },
+            new ColumnSeries<double>
+            {
+                Name = "Mine %",
+                Values = benchmark.Select(b => (double)b.ActualPercent).ToArray(),
+                Fill = new SolidColorPaint(SKColor.Parse("#2563EB"))
+            }
+        ];
+
+        BenchmarkComparisonAxes =
+        [
+            new Axis
+            {
+                Labels = benchmark.Select(b => b.ClassName).ToArray(),
+                LabelsRotation = 0
+            }
+        ];
     }
 
     private ComplianceDisplay ToComplianceDisplay(ComplianceArea area)

@@ -160,11 +160,11 @@ public sealed class AssetServiceTests : IDisposable
     }
 
     [Fact]
-    public void SetPortfolioExclusion_IsNoOpForNonJewellery()
+    public void SetPortfolioExclusion_WorksForNonJewellery()
     {
         Guid mfId = _sut.Create(MutualFund());
 
-        Assert.False(_sut.SetPortfolioExclusion(mfId, excluded: true));
+        Assert.True(_sut.SetPortfolioExclusion(mfId, excluded: true));
     }
 
     public void Dispose() => _db.Dispose();
